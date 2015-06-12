@@ -1,5 +1,5 @@
 # bower_components
-client/bower_components/
+src/assets/lib/
 
-# dist
-client/dist/
+# node_modules
+node_modules/
