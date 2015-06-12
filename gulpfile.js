@@ -8,8 +8,8 @@ var rename = require('gulp-rename');
 
 // define base folders
 var src = {
-  css: ['src/app/**/*.css'],
-  js: ['src/app/**/*.js'],
+  css: ['src/app/assets/**/*.css'],
+  js: ['src/app/assets/**/*.js'],
   bower: ['bower.json', '.bowerrc']
 }
 // define default destination folder
@@ -20,7 +20,7 @@ var dest = 'src/dist/';
 gulp.task('bower', function() {
   var jsFilter = gulpFilter('**/*.js')
   var cssFilter = gulpFilter('**/*.css')
-  return bower('src/assets/lib/')
+  return bower('src/assets/lib')
     .pipe(jsFilter)
     .pipe(concat('notesb-ng.js'))
     .pipe(gulp.dest(dest))
