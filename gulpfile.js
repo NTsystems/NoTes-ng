@@ -17,7 +17,12 @@ gulp.task('bower', function () {
  * Concatenates scripts.
  */
 gulp.task('concatenate', function () {
-  return gulp.src(['./assets/libs/**/*.js', './src/**/*.js'])
+  var sources = [
+    './assets/libs/**/*.js',
+    './src/**/*.js'
+  ];
+
+  return gulp.src(sources)
     .pipe(concat('notes.js'))
     .pipe(gulp.dest('./dist'));
 });
@@ -26,42 +31,15 @@ gulp.task('concatenate', function () {
  * "Uglifies" concatenated files.
  */
 gulp.task('compress', function () {
-  // TODO
-  return gulp.src('./dist/notes.js')
+  var sources = [
+    './dist/notes.js'
+  ];
+
+  return gulp.src(sources)
     .pipe(concat('notes.min.js'))
     .pipe(uglify())
-    .pipe(gulp.dest(dest));
+    .pipe(gulp.dest('./dist'));
 });
-
-// concat bower *.js to `notesb-ng.js`
-// and bower *.css to `notesb-ng.css`
-// gulp.task('bower', function() {
-//   var jsFilter = gulpFilter('**/*.js'),
-//       cssFilter = gulpFilter('**/*.css');
-  
-//   return gulp.src(['./src/assets/lib/**/*.js', './src/app'])
-//     .pipe(concat('notesb-ng.js'))
-//     .pipe(gulp.dest('./src/dist/'));
-//   // return bower('./src/assets/lib')
-//   //   .pipe(jsFilter)
-//   //   .pipe(concat('notesb-ng.js'))
-//   //   .pipe(gulp.dest(dest))
-//   //   .pipe(jsFilter.restore())   
-//   //   .pipe(gulp.dest(dest))
-//   //   .pipe(cssFilter)
-//   //   .pipe(concat('notesb-ng.css'))
-//   //   .pipe(gulp.dest(dest))
-//   //   .pipe(cssFilter.restore())
-// });
-
-// if we want to minify it, just add .pipe(rename({suffix: '.min'}))
-// gulp.task('compress', function() {
-//   return gulp.src(src.js)
-//     .pipe(concat('notesa-ng.js'))
-//     .pipe(uglify())
-//     .pipe(gulp.dest(dest));
-// });
 
 // tasks
 gulp.task('default', ['bower', 'concatenate']);
-gulp.task('deploy', ['default', 'compress']);
