@@ -1,9 +1,33 @@
 <!DOCTYPE html>
-<html>
+<html ng-app='notes-ng'>
 <head>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/0.3.1/showdown.min.js"></script>
 	<title>AngularJS</title>
 </head>
 <body>
+	<section ng-view>
+		<div>
+			<input ng-model="myText" type="text">
+		</div>
+		<div ng-controller="FeedController">
+			<ul>
+				<li ng-repeat="item in feed">
+					<div ng-bind-html="item.content|markdown|trust"></div>
+					{{ item.user }}
 
+					<ul>
+						<li ng-repeat="comment in item.comments">
+							<div ng-bind-html="comment|markdown|trust"></div>
+						</li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+	</section>
+
+<script src="src/dist/notesb-ng.js"></script>
+<script src="src/assets/js/filters.js"></script>
+<script src="src/assets/js/controllers.js"></script>
+<script src="src/assets/js/factories.js"></script>
 </body>
 </html>

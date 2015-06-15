@@ -8,8 +8,8 @@ var rename = require('gulp-rename');
 
 // define base folders
 var src = {
-  css: ['src/app/assets/**/*.css'],
-  js: ['src/app/assets/**/*.js'],
+  css: ['./src/assets/**/*.css'],
+  js: ['./src/assets/**/*.js'],
   bower: ['bower.json', '.bowerrc']
 }
 // define default destination folder
@@ -18,18 +18,22 @@ var dest = 'src/dist/';
 // concat bower *.js to `notesb-ng.js`
 // and bower *.css to `notesb-ng.css`
 gulp.task('bower', function() {
-  var jsFilter = gulpFilter('**/*.js')
-  var cssFilter = gulpFilter('**/*.css')
-  return bower('src/assets/lib')
-    .pipe(jsFilter)
+  var jsFilter = gulpFilter('**/*.js'),
+      cssFilter = gulpFilter('**/*.css');
+  
+  return gulp.src(['./src/assets/lib/**/*.js'])
     .pipe(concat('notesb-ng.js'))
-    .pipe(gulp.dest(dest))
-    .pipe(jsFilter.restore())
-    .pipe(gulp.dest(dest))
-    .pipe(cssFilter)
-    .pipe(concat('notesb-ng.css'))
-    .pipe(gulp.dest(dest))
-    .pipe(cssFilter.restore())
+    .pipe(gulp.dest('./src/dist/'));
+  // return bower('./src/assets/lib')
+  //   .pipe(jsFilter)
+  //   .pipe(concat('notesb-ng.js'))
+  //   .pipe(gulp.dest(dest))
+  //   .pipe(jsFilter.restore())   
+  //   .pipe(gulp.dest(dest))
+  //   .pipe(cssFilter)
+  //   .pipe(concat('notesb-ng.css'))
+  //   .pipe(gulp.dest(dest))
+  //   .pipe(cssFilter.restore())
 });
 
 // if we want to minify it, just add .pipe(rename({suffix: '.min'}))
