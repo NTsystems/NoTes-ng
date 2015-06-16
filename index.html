@@ -1,16 +1,17 @@
 <!DOCTYPE html>
-<html ng-app>
+<html ng-app="app">
 <head>
 	<title>AngularJS</title>
 </head>
 <body>
-	<section ng-view>
-		<div>
-			<input ng-model="myText" type="text">
-		</div>
-		<div>{{myText}}</div>
-	</section>
+	<input ng-model="text">
+	<div>{{text}}</div>
+
+	<h1>Hello Angular!</h1>
+
+
 
 <script src="dist/notes.js"></script>
+<script src="src/app.module.js"></script>
 </body>
 </html>
