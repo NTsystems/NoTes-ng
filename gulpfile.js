@@ -6,12 +6,14 @@ var gulp = require('gulp'),
 	gulpFilter = require('gulp-filter'),
 	rename = require('gulp-rename'),
 	uglify = require('gulp-uglify'),
+	minifyCSS    = require('gulp-minify-css'),
 	flatten = require('gulp-flatten');
 
 
 gulp.task('bower', function(){
 
-	var jsFilter = gulpFilter('*.js');
+	var jsFilter = gulpFilter('*.js'),
+		cssFilter = gulpFilter('*.css');
 
 	return gulp.src(bowerMain())
 
@@ -24,5 +26,16 @@ gulp.task('bower', function(){
 		}))
 		.pipe(gulp.dest('./dist'))
 		.pipe(jsFilter.restore())
+
+		// CSS
+		.pipe(cssFilter)
+		.pipe(concat('notes.css'))
+		.pipe(gulp.dest('./dist'))
+		.pipe(minifyCSS({keepBreaks:true}))
+		.pipe(rename({
+			suffix: ".min"
+		}))
+		.pipe(gulp.dest('./dist'))
+		.pipe(cssFilter.restore())
 });
     
