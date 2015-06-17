@@ -4,8 +4,8 @@
 	angular.module('app', [
 		/*
 		* Order is not important. Angular makes a pass to register
-		* all of the modules listed and then when app.dashboard tries
-		* to use app.data, it's components are available.
+		* all of the modules listed and then when auth.app tries
+		* to use auth.data, it's components are available.
 		*/
 		/*
 		* Everybody has access to these.
@@ -13,7 +13,7 @@
 		* but this is easier to maintain.
 		* 'auth.app'
 		*/
-		'ngRoute',
+		'ui.router',
 		
 	]);
 })();

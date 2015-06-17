@@ -1,21 +1,19 @@
 <!DOCTYPE html>
 <html ng-app="app">
 <head>
-	<title>AngularJS</title>
+	<title>NoTes | Welcome</title>
 	<link rel="stylesheet" type="text/css" href="dist/notes.css">
 </head>
 <body>
-	<div class="col-md-6 col-md-offset-3">
-		<input ng-model="text" class="form-control">
-		<div>{{text}}</div>
 
-		<h1>Hello Angular!</h1>
-	</div>
-	<div ng-view=""></div>
+	<div ng-include="'src/shared/header/header.html'"></div>
+	
+	<div class="container" ui-view></div>
 
-
+	<footer class="footer" ng-include="'src/shared/footer/footer.html'"></footer>
 
 <script src="dist/notes.js"></script>
 <script src="src/app.module.js"></script>
+<script src="src/app.config.js"></script>
 </body>
 </html>

@@ -1,19 +1,18 @@
-angular
-	.module('app')
-	.config(config);
+(function() {
+	angular
+		.module('app')
+		.config(config);
 
-function config($routeProvider){
-	$routeProvider
-		.when('/auth', {
-			templateUrl: 'partials/authView.html',
-			controller: 'Auth'
-			controllerAs: 'vm',
-			resolve: {
-				authService: authService
-			}
-		});
-}
+	function config($stateProvider, $urlRouterProvider) {
 
-function authService(authService){
-	return authService.getUsers();
-}
+		$stateProvider
+			.state('index', {
+		      url: "/index",
+		      template: "<h1>Test Notes</h1>"
+		    })
+			.state("signup", {
+				url: "/signup",
+				templateUrl: "src/auth/partials/auth.view.html"
+			});
+	}
+})();
