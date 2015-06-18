@@ -1,3 +1,6 @@
+<<<<<<< HEAD
+// TO-DO
+=======
 (function() {
 	angular
 		.module('app')
@@ -16,3 +19,4 @@
 			});
 	}
 })();
+>>>>>>> develop
