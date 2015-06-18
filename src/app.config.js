@@ -13,6 +13,11 @@
 			.state("signup", {
 				url: "/signup",
 				templateUrl: "src/auth/partials/auth.view.html"
+			})
+			.state("create-notebook", {
+				url: "/create-notebook",
+				templateUrl: "src/dashboard/createNotebook.html",
+				controller: 'NbController'
 			});
 	}
 })();
