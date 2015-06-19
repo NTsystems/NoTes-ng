@@ -1,5 +1,5 @@
 (function() {
-	'user strict';
+	'use strict';
 
 	angular.module('app', [
 		/*
@@ -14,6 +14,7 @@
 		* 'auth.app'
 		*/
 		'ui.router',
+		'app.auth',
 		
 	]);
 })();

@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
 /**
  * @license AngularJS v1.4.1
  * (c) 2010-2015 Google, Inc. http://angularjs.org
@@ -39815,11 +39814,6 @@ if (typeof jQuery === 'undefined') {
 
       if (data.offsetBottom != null) data.offset.bottom = data.offsetBottom
       if (data.offsetTop    != null) data.offset.top    = data.offsetTop
-=======
-// TO-DO
-(function() {
-	'user strict';
->>>>>>> Stashed changes
 
       Plugin.call($spy, data)
     })
