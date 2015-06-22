@@ -12,7 +12,9 @@
 		    })
 			.state("signup", {
 				url: "/signup",
-				templateUrl: "src/auth/partials/auth.view.html"
+				templateUrl: "src/auth/partials/auth.view.html",
+				controller: 'AuthCtrl',
+				controllerAs: 'vm',
 			})
 			.state("create-notebook", {
 				url: "/create-notebook",

@@ -14,7 +14,7 @@
 		* 'auth.app'
 		*/
 		'ui.router',
+		'app.auth',
 		'app.notebook',
-		
 	]);
 })();
