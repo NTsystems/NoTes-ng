@@ -13,7 +13,7 @@
 			.state("signup", {
 				url: "/signup",
 				templateUrl: "src/auth/partials/auth.view.html",
-				controller: 'AuthCtrl',
+				controller: 'AuthController',
 				controllerAs: 'vm',
 			});
 	}

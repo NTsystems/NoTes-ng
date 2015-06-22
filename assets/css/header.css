@@ -5,8 +5,8 @@
 .jumbotron {
 	background-image:url('../images/header-cover.jpg');
 	background-size:cover;
-	padding-top: 10%;
-	padding-bottom: 10%;
+	padding-top: 3%;
+	padding-bottom: 3%;
 	text-align: center;
 	color: darkorange;
 }
