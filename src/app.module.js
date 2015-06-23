@@ -14,7 +14,6 @@
 		* 'auth.app'
 		*/
 		'ui.router',
-		'ngCookies',
 		'app.auth',
 		
 	]);

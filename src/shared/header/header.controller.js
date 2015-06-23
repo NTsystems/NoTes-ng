@@ -5,9 +5,9 @@
 		.module('app')
 		.controller('HeaderController', HeaderController);
 
-	HeaderController.$inject = ['$cookies'];
+	HeaderController.$inject = ['register'];
 
-	function HeaderController($cookies) {
+	function HeaderController(register) {
 		var vm = this;
 		/**
 		* to-do

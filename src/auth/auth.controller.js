@@ -5,17 +5,19 @@
 		.module('app.auth')
 		.controller('AuthController', AuthController);
 
-	AuthController.$inject = ['$cookies'];
+	AuthController.$inject = ['register'];
 
-	function AuthController($cookies) {
+	function AuthController(register) {
 		var vm = this;
-		vm.title = "Sign Up Now";
-		var cookie = $cookies.get('e_mail');
-
+		vm.title = 'Sign Up Now';
+		vm.notes = 'NoTes - Your childhood is back!';
+		
 		vm.register = function () {
-			$cookies.put('e_mail', vm.user.e_mail);
-		    alert(vm.user.e_mail);
+			//$sessionStorage.setItem('e_mail', vm.user.e_mail);
+		    register.registerUser(vm.user.e_mail, vm.user.password);
 		};
+
+
 	};
 	
 })();

@@ -14,7 +14,6 @@
 		* 'auth.app'
 		*/
 		'ui.router',
-		'ngCookies',
 		'app.auth',
 		
 	]);
@@ -25,17 +24,31 @@
 		.config(config);
 
 	function config($stateProvider, $urlRouterProvider) {
+		$urlRouterProvider.otherwise('/');
 
 		$stateProvider
-			.state('index', {
-		      url: "/index",
-		      template: "<h1>Test Notes</h1>"
+			.state('home', {
+		      url: "/",
+		      views: {
+		      	'header': {
+		      		templateUrl: 'src/shared/header/header.html',
+		      		controller: 'AuthController',
+		      		controllerAs: 'vm',
+		      	},
+		      	'footer': {
+		      		templateUrl: 'src/shared/footer/footer.html'
+		      	}
+		      }
 		    })
-			.state("signup", {
-				url: "/signup",
-				templateUrl: "src/auth/partials/auth.view.html",
-				controller: 'AuthController',
-				controllerAs: 'vm',
+			.state("home.signup", {
+				url: "signup",
+				views: {
+					'content@': {
+						templateUrl: "src/auth/partials/auth.view.html",
+						controller: 'AuthController',
+						controllerAs: 'vm',
+					}
+				}
 			});
 	}
 })();
@@ -52,17 +65,19 @@
 		.module('app.auth')
 		.controller('AuthController', AuthController);
 
-	AuthController.$inject = ['$cookies'];
+	AuthController.$inject = ['register'];
 
-	function AuthController($cookies) {
+	function AuthController(register) {
 		var vm = this;
-		vm.title = "Sign Up Now";
-		var cookie = $cookies.get('e_mail');
-
+		vm.title = 'Sign Up Now';
+		vm.notes = 'NoTes - Your childhood is back!';
+		
 		vm.register = function () {
-			$cookies.put('e_mail', vm.user.e_mail);
-		    alert(vm.user.e_mail);
+			//$sessionStorage.setItem('e_mail', vm.user.e_mail);
+		    register.registerUser(vm.user.e_mail, vm.user.password);
 		};
+
+
 	};
 	
 })();
@@ -87,7 +102,35 @@
 	};
 
 })();
+(function () {
+	angular
+		.module('app.auth')
+		.factory('register', register);
 
+	function register() {
+		var e_mail = '';
+		var password = '';
+		var user = {};
+		var service = {
+			e_mail: e_mail,
+			password: password,
+			registerUser: registerUser,
+		};
+		return service;
+
+		function registerUser(e_mail, password) {
+			e_mail = e_mail;
+			password = password;
+			user.e_mail = e_mail;
+			user.password = password;
+			alert(user.e_mail + " and " + user.password);
+			console.log(user.e_mail);
+		};
+
+
+	}
+
+})();
 (function () {
 	'use strict';
 
@@ -95,9 +138,9 @@
 		.module('app')
 		.controller('HeaderController', HeaderController);
 
-	HeaderController.$inject = ['$cookies'];
+	HeaderController.$inject = ['register'];
 
-	function HeaderController($cookies) {
+	function HeaderController(register) {
 		var vm = this;
 		/**
 		* to-do

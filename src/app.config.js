@@ -4,17 +4,31 @@
 		.config(config);
 
 	function config($stateProvider, $urlRouterProvider) {
+		$urlRouterProvider.otherwise('/');
 
 		$stateProvider
-			.state('index', {
-		      url: "/index",
-		      template: "<h1>Test Notes</h1>"
+			.state('home', {
+		      url: "/",
+		      views: {
+		      	'header': {
+		      		templateUrl: 'src/shared/header/header.html',
+		      		controller: 'AuthController',
+		      		controllerAs: 'vm',
+		      	},
+		      	'footer': {
+		      		templateUrl: 'src/shared/footer/footer.html'
+		      	}
+		      }
 		    })
-			.state("signup", {
-				url: "/signup",
-				templateUrl: "src/auth/partials/auth.view.html",
-				controller: 'AuthController',
-				controllerAs: 'vm',
+			.state("home.signup", {
+				url: "signup",
+				views: {
+					'content@': {
+						templateUrl: "src/auth/partials/auth.view.html",
+						controller: 'AuthController',
+						controllerAs: 'vm',
+					}
+				}
 			});
 	}
 })();
