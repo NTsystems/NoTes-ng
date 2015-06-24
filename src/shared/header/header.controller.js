@@ -5,10 +5,11 @@
 		.module('app')
 		.controller('HeaderController', HeaderController);
 
-	HeaderController.$inject = ['register'];
+	HeaderController.$inject = ['$window', 'sessionData'];
 
-	function HeaderController(register) {
+	function HeaderController($window, sessionData) {
 		var vm = this;
+		vm.notes = 'NoTes - Your childhood is back!';
 		/**
 		* to-do
 		*/

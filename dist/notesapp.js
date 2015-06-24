@@ -15,6 +15,7 @@
 		*/
 		'ui.router',
 		'app.auth',
+		'LocalStorageModule',
 		
 	]);
 })();
@@ -32,7 +33,7 @@
 		      views: {
 		      	'header': {
 		      		templateUrl: 'src/shared/header/header.html',
-		      		controller: 'AuthController',
+		      		controller: 'HeaderController',
 		      		controllerAs: 'vm',
 		      	},
 		      	'footer': {
@@ -40,12 +41,22 @@
 		      	}
 		      }
 		    })
-			.state("home.signup", {
-				url: "signup",
+			.state('home.signup', {
+				url: 'signup',
 				views: {
 					'content@': {
-						templateUrl: "src/auth/partials/auth.view.html",
-						controller: 'AuthController',
+						templateUrl: 'src/auth/partials/register.view.html',
+						controller: 'RegisterController',
+						controllerAs: 'vm',
+					}
+				}
+			})
+			.state('home.signin', {
+				url: 'signin',
+				views: {
+					'content@': {
+						templateUrl: 'src/auth/partials/login.view.html',
+						controller: 'LoginController',
 						controllerAs: 'vm',
 					}
 				}
@@ -59,57 +70,64 @@
 	angular.module('app.auth', []);
 })();
 (function () {
+	'use strict'
+
+	angular
+		.module('app.auth')
+		.controller('LoginController', LoginController);
+
+	LoginController.$inject = ['$window', 'sessionData'];
+
+	function LoginController($window, sessionData) {
+		var vm = this;
+
+		vm.loginTitle = "Sign In";
+		
+
+		vm.login = function () {
+			alert(vm.user.e_mail);
+		};
+
+
+	};
+
+})();
+
+(function () {
 	'use strict';
 
 	angular
 		.module('app.auth')
-		.controller('AuthController', AuthController);
+		.controller('RegisterController', RegisterController);
 
-	AuthController.$inject = ['register'];
+	RegisterController.$inject = ['register', 'sessionData'];
 
-	function AuthController(register) {
+	function RegisterController(register, sessionData) {
 		var vm = this;
-		vm.title = 'Sign Up Now';
-		vm.notes = 'NoTes - Your childhood is back!';
+		vm.signup = 'Sign Up Now';
 		
 		vm.register = function () {
-			//$sessionStorage.setItem('e_mail', vm.user.e_mail);
+			sessionData.setCurrentUser(vm.user.e_mail);
 		    register.registerUser(vm.user.e_mail, vm.user.password);
 		};
 
 
 	};
+
+	//$sessionStorage.setItem('e_mail', vm.user.e_mail);
 	
 })();
 (function () {
 	'use strict';
-
-	/** 
-	* Represents dataservice factory 
-	* @factory
-	*/
-	angular
-		.module('app.auth')
-		.factory('dataservice', dataservice);
-
-	dataservice.$inject = ['$http', 'logger'];
-
-	/**
-	* to-do dataservice
-	*/
-	function dataservice() {
-		//to-do
-	};
-
-})();
-(function () {
+	
 	angular
 		.module('app.auth')
 		.factory('register', register);
 
-	function register() {
+	register.$inject = ['$location'];
+
+	function register($location) {
 		var e_mail = '';
-		var password = '';
 		var user = {};
 		var service = {
 			e_mail: e_mail,
@@ -123,8 +141,8 @@
 			password = password;
 			user.e_mail = e_mail;
 			user.password = password;
+			$location.path('/home/');
 			alert(user.e_mail + " and " + user.password);
-			console.log(user.e_mail);
 		};
 
 
@@ -135,13 +153,41 @@
 	'use strict';
 
 	angular
+		.module('app.auth')
+		.factory('sessionData', sessionData);
+
+	sessionData.$inject = ['localStorageService'];
+
+	function sessionData(localStorageService) {
+		var service = {
+			setCurrentUser: setCurrentUser,
+			getCurrentUser: getCurrentUser,
+		};
+
+		return service;
+
+		function setCurrentUser(e_mail) {
+			localStorageService.set('e_mail', e_mail);
+		};
+
+		function getCurrentUser(key) {
+			localStorageService.get(key);
+		};
+	}
+
+})();
+(function () {
+	'use strict';
+
+	angular
 		.module('app')
 		.controller('HeaderController', HeaderController);
 
-	HeaderController.$inject = ['register'];
+	HeaderController.$inject = ['$window', 'sessionData'];
 
-	function HeaderController(register) {
+	function HeaderController($window, sessionData) {
 		var vm = this;
+		vm.notes = 'NoTes - Your childhood is back!';
 		/**
 		* to-do
 		*/

@@ -12,7 +12,7 @@
 		      views: {
 		      	'header': {
 		      		templateUrl: 'src/shared/header/header.html',
-		      		controller: 'AuthController',
+		      		controller: 'HeaderController',
 		      		controllerAs: 'vm',
 		      	},
 		      	'footer': {
@@ -20,12 +20,22 @@
 		      	}
 		      }
 		    })
-			.state("home.signup", {
-				url: "signup",
+			.state('home.signup', {
+				url: 'signup',
 				views: {
 					'content@': {
-						templateUrl: "src/auth/partials/auth.view.html",
-						controller: 'AuthController',
+						templateUrl: 'src/auth/partials/register.view.html',
+						controller: 'RegisterController',
+						controllerAs: 'vm',
+					}
+				}
+			})
+			.state('home.signin', {
+				url: 'signin',
+				views: {
+					'content@': {
+						templateUrl: 'src/auth/partials/login.view.html',
+						controller: 'LoginController',
 						controllerAs: 'vm',
 					}
 				}

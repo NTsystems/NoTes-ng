@@ -15,6 +15,7 @@
 		*/
 		'ui.router',
 		'app.auth',
+		'LocalStorageModule',
 		
 	]);
 })();

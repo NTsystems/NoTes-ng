@@ -1,11 +1,14 @@
 (function () {
+	'use strict';
+	
 	angular
 		.module('app.auth')
 		.factory('register', register);
 
-	function register() {
+	register.$inject = ['$location'];
+
+	function register($location) {
 		var e_mail = '';
-		var password = '';
 		var user = {};
 		var service = {
 			e_mail: e_mail,
@@ -19,6 +22,7 @@
 			password = password;
 			user.e_mail = e_mail;
 			user.password = password;
+			$location.path('/home/');
 			alert(user.e_mail + " and " + user.password);
 		};
 
