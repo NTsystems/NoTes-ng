@@ -6,14 +6,16 @@
 </head>
 <body>
 
-	<div ng-include="'src/shared/header/header.html'"></div>
+	<div ui-view="header"></div>
 	
-	<div class="container" ui-view></div>
+	<div ui-view="side-bar"></div>
 
-	<footer class="footer" ng-include="'src/shared/footer/footer.html'"></footer>
+	<div class="container" ui-view="content"></div>
+
+	<footer class="footer" ui-view="footer"></footer>
 
 <script src="dist/notes.js"></script>
 <script src="dist/notesapp.js"></script>
 
-</body
+</body>
 </html>

@@ -4,9 +4,14 @@
 	angular
 		.module('app.notebook')
 		.controller('NbController', NbController);
+		NbController.$inject = ['createFactory'];
 
-		function NbController() {
+		function NbController(createFactory) {
 			var vm = this;
-			vm.title = 'Create Notebook'
+			vm.create = function (title) {
+				if(title != '') {
+					createFactory.create(title);
+				}
+			}
 		}
 })();
