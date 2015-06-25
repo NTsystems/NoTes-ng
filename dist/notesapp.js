@@ -141,7 +141,7 @@
 			password = password;
 			user.e_mail = e_mail;
 			user.password = password;
-			$location.path('/home/');
+			$location.path("'http://192.168.85.5:8000/api/users/'");
 			alert(user.e_mail + " and " + user.password);
 		};
 
