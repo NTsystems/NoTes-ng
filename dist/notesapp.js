@@ -55,7 +55,7 @@
 				views: {
 					"content@": {
 						templateUrl: "src/dashboard/createNotebook.html",
-						controller: "NbController",
+						controller: "CreateController",
 						controllerAs: "vm",
 					}
 				}
@@ -65,7 +65,7 @@
 				views: {
 					"content@": {
 						templateUrl: "src/dashboard/listNotebook.html",
-						controller: "NbController",
+						controller: "CreateController",
 						controllerAs: "vm",
 					}
 				}
@@ -106,37 +106,82 @@
 
 	angular
 		.module('app.notebook')
-		.controller('NbController', NbController);
-		NbController.$inject = ['notebook'];
+		.controller('CreateController', CreateController);
 
-		function NbController(notebook) {
-			var vm = this;
-			vm.create = function (title) {
-				if(title != '') {
-					notebook.create(title);
-				}
-			}
-		}
+	CreateController.$inject = ['createFactory'];
+
+	function CreateController(createFactory) {
+		var vm = this;
+		
+		vm.create = function () {
+		    createFactory.createTitle(vm.title);
+		};
+
+
+	};
+	
 })();
 (function () {
 	'use strict';
 
 	angular
 		.module('app.notebook')
-		.factory('notebook', notebook);
+		.factory('createFactory', createFactory);
 
-		function notebook() {
-			var title = '';
-			var names = {
-				title: title,
-				create: create,
-			};
-
-			return names;
-
-			function create(title) {
-				title = title;
-				console.log(title);
-			};
+	function createFactory() {
+		var name = '';
+		var title = {
+			name: name,
+			createTitle: createTitle,
 		};
-})();  
+		return title;
+
+		function createTitle(title) {
+			title = title;
+			console.log(title);
+		};
+
+
+	}
+
+})(); 
+// (function () {
+// 	'use strict';
+
+// 	angular
+// 		.module('app.notebook')
+// 		.controller('ListController', ListController);
+
+// 	ListController.$inject = ['ListFactory'];
+
+// 	function ListController(ListFactory) {
+// 		var vm = this;
+		
+// 		vm.list = function() {
+// 		    ListFactory.notebook(title);
+// 		};
+
+
+// 	};
+	
+// })();
+// (function () {
+// 	'use strict';
+
+// 	angular
+// 		.module('app.notebook')
+// 		.factory('listFactory', listFactory);
+
+// 	function listFactory() {
+// 		var notebooks = {};
+
+// 		notebooks.list = [];
+
+// 		return notebooks;
+
+// 		function listNotebook(notebook) {
+// 			notebooks.list.push({title: notebook});
+// 		}
+
+// 	}
+// })();

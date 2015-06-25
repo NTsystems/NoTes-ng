@@ -35,7 +35,7 @@
 				views: {
 					"content@": {
 						templateUrl: "src/dashboard/createNotebook.html",
-						controller: "NbController",
+						controller: "CreateController",
 						controllerAs: "vm",
 					}
 				}
@@ -45,7 +45,7 @@
 				views: {
 					"content@": {
 						templateUrl: "src/dashboard/listNotebook.html",
-						controller: "NbController",
+						controller: "CreateController",
 						controllerAs: "vm",
 					}
 				}
