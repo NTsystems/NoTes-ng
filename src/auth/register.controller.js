@@ -12,7 +12,6 @@
 		vm.signup = 'Sign Up Now';
 		
 		vm.register = function () {
-			sessionData.setCurrentUser(vm.user.e_mail);
 		    register.registerUser(vm.user.e_mail, vm.user.password);
 		};
 

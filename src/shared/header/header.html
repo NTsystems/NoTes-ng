@@ -25,7 +25,7 @@
 
 <div class="jumbotron">
 	<h1>{{vm.notes}}</h1>
-	<h2>{{vm.currentUser}}</h2>
+	<h2 ng-if='vm.loggedIn'>Ulogovan!</h2>
 </div>
 
 <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Lobster" />

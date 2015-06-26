@@ -1,4 +1,4 @@
-(function() {
+(function () {
 	'use strict';
 
 	angular.module('app', [
@@ -15,7 +15,6 @@
 		*/
 		'ui.router',
 		'app.auth',
-		'LocalStorageModule',
 		
 	]);
 })();
@@ -82,16 +81,22 @@
 		var vm = this;
 
 		vm.loginTitle = "Sign In";
-		
 
 		vm.login = function () {
-			alert(vm.user.e_mail);
-		};
+			var authUser = {
+				username: vm.user.e_mail,
+				token: "token",
+			};
 
+			sessionData.setCurrentUser(authUser);
+			alert(authUser.username + " " + authUser.token + " " + sessionData.isLoggedIn() + " " + sessionData.getCurrentUser());
+		};
 
 	};
 
 })();
+
+
 
 (function () {
 	'use strict';
@@ -107,7 +112,6 @@
 		vm.signup = 'Sign Up Now';
 		
 		vm.register = function () {
-			sessionData.setCurrentUser(vm.user.e_mail);
 		    register.registerUser(vm.user.e_mail, vm.user.password);
 		};
 
@@ -141,7 +145,7 @@
 			password = password;
 			user.e_mail = e_mail;
 			user.password = password;
-			$location.path("'http://192.168.85.5:8000/api/users/'");
+			$location.path('/home/');
 			alert(user.e_mail + " and " + user.password);
 		};
 
@@ -156,22 +160,51 @@
 		.module('app.auth')
 		.factory('sessionData', sessionData);
 
-	sessionData.$inject = ['localStorageService'];
+	sessionData.$inject = ['$window', '$rootScope'];
 
-	function sessionData(localStorageService) {
+	function sessionData($window, $rootScope) {
+		var loggedIn = false;
+
+		var user = {
+			username: sessionStorage.getItem('username'),
+			token: sessionStorage.getItem('token'),
+		};
+
 		var service = {
 			setCurrentUser: setCurrentUser,
 			getCurrentUser: getCurrentUser,
+			isLoggedIn: isLoggedIn,
 		};
 
 		return service;
 
-		function setCurrentUser(e_mail) {
-			localStorageService.set('e_mail', e_mail);
+		// Watch sessionStorage for new token
+		$rootScope.$watch(function () {
+			return sessionStorage.getItem('token');
+		}, function (newVal, oldVal) {
+			if(newVal){
+				loggedIn = true;
+				alert('logovan');
+			} else {
+				loggedIn = false;
+			}
+		}, true);
+
+		function setCurrentUser(authUser) {
+			user.username = authUser.username;
+			user.token = authUser.token;
+			loggedIn = true;
+			sessionStorage.setItem('username', user.username);
+			sessionStorage.setItem('token', user.token);
 		};
 
-		function getCurrentUser(key) {
-			localStorageService.get(key);
+		function getCurrentUser() {
+			return isLoggedIn() ? user : null;
+			alert(user.username);
+		};
+
+		function isLoggedIn() {
+			return loggedIn;
 		};
 	}
 
@@ -188,6 +221,11 @@
 	function HeaderController($window, sessionData) {
 		var vm = this;
 		vm.notes = 'NoTes - Your childhood is back!';
+
+		vm.loggedIn = sessionData.isLoggedIn();
+
+		alert(sessionData.isLoggedIn());
+
 		/**
 		* to-do
 		*/

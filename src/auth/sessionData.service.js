@@ -5,22 +5,39 @@
 		.module('app.auth')
 		.factory('sessionData', sessionData);
 
-	sessionData.$inject = ['localStorageService'];
+	sessionData.$inject = ['$window', '$rootScope'];
 
-	function sessionData(localStorageService) {
+	function sessionData($window, $rootScope) {
+		var loggedIn = false;
+
+		var user = {
+			username: sessionStorage.getItem('username'),
+			token: sessionStorage.getItem('token'),
+		};
+
 		var service = {
 			setCurrentUser: setCurrentUser,
 			getCurrentUser: getCurrentUser,
+			isLoggedIn: isLoggedIn,
 		};
 
 		return service;
 
-		function setCurrentUser(e_mail) {
-			localStorageService.set('e_mail', e_mail);
+		function setCurrentUser(authUser) {
+			user.username = authUser.username;
+			user.token = authUser.token;
+			loggedIn = true;
+			sessionStorage.setItem('username', user.username);
+			sessionStorage.setItem('token', user.token);
 		};
 
-		function getCurrentUser(key) {
-			localStorageService.get(key);
+		function getCurrentUser() {
+			return isLoggedIn() ? user : null;
+			alert(user.username);
+		};
+
+		function isLoggedIn() {
+			return loggedIn;
 		};
 	}
 
