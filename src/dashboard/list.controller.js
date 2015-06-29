@@ -5,13 +5,13 @@
 		.module('app.notebook')
 		.controller('ListController', ListController);
 
-	ListController.$inject = ['ListFactory'];
+	ListController.$inject = ['notebookFactory'];
 
-	function ListController(ListFactory) {
+	function ListController(notebookFactory) {
 		var vm = this;
 		
-		vm.list = function() {
-		    ListFactory.notebook(title);
+		function list() {
+		    vm.list = notebookFactory.notebook.push(title);
 		};
 
 

@@ -4,8 +4,8 @@
 			<div class="panel panel-default">
 				<div class="panel-heading">A list of all notebooks</div>
 				<div class="panel-body">
-					<ul ng-repeat="list in notebooks.list">
-						<li><a ui-sref="#">{{list.title}}</a></li>
+					<ul ng-repeat="l in list">
+						<li><a ui-sref="#">{{l.title}}</a></li>
 					</ul>
 					<a ui-sref="home.create-notebook" type="submit" class="btn btn-primary">Create</a>
 					<a ui-sref="home.list-notebook" class="btn btn-danger">Delete</a>

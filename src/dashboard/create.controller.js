@@ -5,13 +5,18 @@
 		.module('app.notebook')
 		.controller('CreateController', CreateController);
 
-	CreateController.$inject = ['createFactory'];
+	CreateController.$inject = ['notebookFactory'];
 
-	function CreateController(createFactory) {
+	function CreateController(notebookFactory) {
 		var vm = this;
+		vm.name = [];
 		
-		vm.create = function () {
-		    createFactory.createTitle(vm.title);
+		function create() {
+		    vm.create = notebookFactory.createTitle(title)
+		    	.then(function(name) {
+		    		vm.name.push(name);
+		    	});
+
 		};
 
 

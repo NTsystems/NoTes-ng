@@ -1,8 +1,8 @@
 <div class="conteiner-fluid">
 	<div class="row">
 		<div class="col-md-6 col-md-offset-3">
-			<div class="create-dialog"  ng-controller='CreateController'>
-				<form form role="form">
+			<div class="create-dialog">
+				<form name="form" role=form ng-submit="vm.create()">
 					<div>
 						<div class="text-center">
 							<h2>Create Notebook</h2>
@@ -12,16 +12,16 @@
 						<div>
 							<center>
 								<br />
-								<input ng-model="vm.title" class="form control input-lg" type="text" required placeholder="Title your notebook">
-								<div role="alert" class="col-lg-12">
-									<span ng-show="form.input.$error.required" class="help-block">Name is required!</span>
+								<input ng-model="vm.name" class="form control input-lg" type="text" required placeholder="Title your notebook">
+								<div role="alert">
+									<span ng-show="form.input.$error.required">Name is required!</span>
 								</div>
 							</center>
 						</div>
 					</div><br />
 					<div class="form-group">
 					<center>
-						<a ui-sref="home.list-notebook" type="submit" class="btn btn-primary" ng-click="vm.create()">Create</a>
+						<a ui-sref="home.list-notebook" type="submit" ng-disabled="form.$invalid || vm.dataLoading" class="btn btn-primary" ng-click="vm.create()">Create</a>
 						<a ui-sref="home" class="btn btn-default">Cancel</a>
 					</center>
 					</div>			

@@ -51,7 +51,7 @@
 				}
 			})
 			.state("home.create-notebook",{
-				url: "create-notebook",
+				url: "notebooks",
 				views: {
 					"content@": {
 						templateUrl: "src/dashboard/createNotebook.html",
@@ -61,11 +61,11 @@
 				}
 			})
 			.state("home.list-notebook",{
-				url: "list-notebook",
+				url: "notebooks",
 				views: {
 					"content@": {
 						templateUrl: "src/dashboard/listNotebook.html",
-						controller: "CreateController",
+						controller: "ListController",
 						controllerAs: "vm",
 					}
 				}
@@ -108,13 +108,18 @@
 		.module('app.notebook')
 		.controller('CreateController', CreateController);
 
-	CreateController.$inject = ['createFactory'];
+	CreateController.$inject = ['notebookFactory'];
 
-	function CreateController(createFactory) {
+	function CreateController(notebookFactory) {
 		var vm = this;
+		vm.name = [];
 		
-		vm.create = function () {
-		    createFactory.createTitle(vm.title);
+		function create() {
+		    vm.create = notebookFactory.createTitle(title)
+		    	.then(function(name) {
+		    		vm.name.push(name);
+		    	});
+
 		};
 
 
@@ -126,62 +131,86 @@
 
 	angular
 		.module('app.notebook')
-		.factory('createFactory', createFactory);
+		.factory('notebookFactory', notebookFactory);
 
-	function createFactory() {
-		var name = '';
+	notebookFactory.$inject = ['$http', '$q'];
+
+	function notebookFactory($http, $q) {
+		var url = 'http://192.168.85.5:8000/api';
 		var title = {
-			name: name,
-			createTitle: createTitle,
+			getAllNotebooks: getAllNotebooks,
+			createTitle: createTitle
 		};
+
 		return title;
 
+		function getAllNotebooks() {
+			var defer = $q.defer();
+			$http.get(url + '/notebooks')
+			.success(function(response){
+				defer.resolve(response);
+			})
+			.error(function(error, status){
+				defer.reject(error);
+			})
+
+			return defer.promise;
+		}
+
 		function createTitle(title) {
-			title = title;
-			console.log(title);
-		};
+			var defer = $q.defer();
+			$http.post(url + '/notebooks', title)
+			.success(function(response){
+				defer.resolve(response);
+			})
+			.error(function(error, status){
+				defer.reject(error);
+			})
+
+			return defer.promise;
+		}
 
 
 	}
 
 })(); 
-// (function () {
-// 	'use strict';
+(function () {
+	'use strict';
 
-// 	angular
-// 		.module('app.notebook')
-// 		.controller('ListController', ListController);
+	angular
+		.module('app.notebook')
+		.controller('ListController', ListController);
 
-// 	ListController.$inject = ['ListFactory'];
+	ListController.$inject = ['notebookFactory'];
 
-// 	function ListController(ListFactory) {
-// 		var vm = this;
+	function ListController(notebookFactory) {
+		var vm = this;
 		
-// 		vm.list = function() {
-// 		    ListFactory.notebook(title);
-// 		};
+		function list() {
+		    vm.list = notebookFactory.notebook.push(title);
+		};
 
 
-// 	};
+	};
 	
-// })();
-// (function () {
-// 	'use strict';
+})();
+(function () {
+	'use strict';
 
-// 	angular
-// 		.module('app.notebook')
-// 		.factory('listFactory', listFactory);
+	angular
+		.module('app.notebook')
+		.factory('listFactory', listFactory);
 
-// 	function listFactory() {
-// 		var notebooks = {};
+	function listFactory() {
+		var notebooks = {};
 
-// 		notebooks.list = [];
+		notebooks.list = [];
 
-// 		return notebooks;
+		return notebooks;
 
-// 		function listNotebook(notebook) {
-// 			notebooks.list.push({title: notebook});
-// 		}
+		function listNotebook(notebook) {
+			notebooks.list.push({title: notebook});
+		}
 
-// 	}
-// })();
+	}
+})();

@@ -31,7 +31,7 @@
 				}
 			})
 			.state("home.create-notebook",{
-				url: "create-notebook",
+				url: "notebooks",
 				views: {
 					"content@": {
 						templateUrl: "src/dashboard/createNotebook.html",
@@ -41,11 +41,11 @@
 				}
 			})
 			.state("home.list-notebook",{
-				url: "list-notebook",
+				url: "notebooks",
 				views: {
 					"content@": {
 						templateUrl: "src/dashboard/listNotebook.html",
-						controller: "CreateController",
+						controller: "ListController",
 						controllerAs: "vm",
 					}
 				}
