@@ -5,19 +5,22 @@
 		.module('app.auth')
 		.controller('RegisterController', RegisterController);
 
-	RegisterController.$inject = ['register', 'sessionData'];
+	RegisterController.$inject = ['registerservice', 'sessionData'];
 
-	function RegisterController(register, sessionData) {
+	function RegisterController(registerservice, sessionData) {
 		var vm = this;
+		
+
+		vm.register = register;
 		vm.signup = 'Sign Up Now';
 		
-		vm.register = function () {
-		    register.registerUser(vm.user.e_mail, vm.user.password);
+		//////////////////////////
+
+		function register() {
+		    registerservice.registerUser(vm.user.e_mail, vm.user.password);
 		};
 
 
 	};
-
-	//$sessionStorage.setItem('e_mail', vm.user.e_mail);
 	
 })();

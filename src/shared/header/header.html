@@ -13,10 +13,11 @@
 		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 			<ul class="nav navbar-nav navbar-right">
 				<li>
-					<a ui-sref=".signin">Sign In</a>
+					<a ui-sref=".signin" ng-if='!vm.loggedIn'>Sign In</a>
+					<a href="#" ng-if='vm.loggedIn'>Sign Out</a>
 				</li>
 				<li>
-					<a ui-sref=".signup">Sing Up</a>
+					<a ui-sref=".signup" ng-if='!vm.loggedIn'>Sing Up</a>
 				</li>
 			</ul>
 		</div>

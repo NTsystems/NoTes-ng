@@ -23,17 +23,17 @@
 
 		return service;
 
+		///////////////
+
 		function setCurrentUser(authUser) {
 			user.username = authUser.username;
 			user.token = authUser.token;
-			loggedIn = true;
 			sessionStorage.setItem('username', user.username);
 			sessionStorage.setItem('token', user.token);
 		};
 
-		function getCurrentUser() {
-			return isLoggedIn() ? user : null;
-			alert(user.username);
+		function getCurrentUser(loggedIn) {
+			return loggedIn ? user : null;
 		};
 
 		function isLoggedIn() {

@@ -80,22 +80,55 @@
 	function LoginController($window, sessionData) {
 		var vm = this;
 
+		vm.login = login;
 		vm.loginTitle = "Sign In";
 
-		vm.login = function () {
+		/////////////////
+
+		function login() {
 			var authUser = {
 				username: vm.user.e_mail,
-				token: "token",
+				token: "token1",
 			};
 
 			sessionData.setCurrentUser(authUser);
-			alert(authUser.username + " " + authUser.token + " " + sessionData.isLoggedIn() + " " + sessionData.getCurrentUser());
 		};
-
 	};
 
 })();
+(function () {
+	'use strict';
 
+	angular
+		.module('app.auth')
+		.factory('loginservice', loginservice);
+
+	loginservice.$inject = ['$http'];
+
+	function loginservice($http) {
+		return {
+			loginUser: loginUser,
+		};
+
+		/*
+		* TO Do
+		*/
+		function loginUser() {
+			return $http.post('')
+				.then(getLoggedUser)
+				.catch(getLogginFailed);
+
+			function getLoggedUser(response) {
+				return response.data.results;
+			}
+
+			function getLogginFailed(error) {
+				alert(error.data);
+			}
+		}
+	}
+
+})();
 
 
 (function () {
@@ -105,20 +138,23 @@
 		.module('app.auth')
 		.controller('RegisterController', RegisterController);
 
-	RegisterController.$inject = ['register', 'sessionData'];
+	RegisterController.$inject = ['registerservice', 'sessionData'];
 
-	function RegisterController(register, sessionData) {
+	function RegisterController(registerservice, sessionData) {
 		var vm = this;
+		
+
+		vm.register = register;
 		vm.signup = 'Sign Up Now';
 		
-		vm.register = function () {
-		    register.registerUser(vm.user.e_mail, vm.user.password);
+		//////////////////////////
+
+		function register() {
+		    registerservice.registerUser(vm.user.e_mail, vm.user.password);
 		};
 
 
 	};
-
-	//$sessionStorage.setItem('e_mail', vm.user.e_mail);
 	
 })();
 (function () {
@@ -126,11 +162,11 @@
 	
 	angular
 		.module('app.auth')
-		.factory('register', register);
+		.factory('registerservice', registerservice);
 
-	register.$inject = ['$location'];
+	registerservice.$inject = ['$location'];
 
-	function register($location) {
+	function registerservice($location) {
 		var e_mail = '';
 		var user = {};
 		var service = {
@@ -139,6 +175,8 @@
 			registerUser: registerUser,
 		};
 		return service;
+
+		///////////////
 
 		function registerUser(e_mail, password) {
 			e_mail = e_mail;
@@ -178,29 +216,17 @@
 
 		return service;
 
-		// Watch sessionStorage for new token
-		$rootScope.$watch(function () {
-			return sessionStorage.getItem('token');
-		}, function (newVal, oldVal) {
-			if(newVal){
-				loggedIn = true;
-				alert('logovan');
-			} else {
-				loggedIn = false;
-			}
-		}, true);
+		///////////////
 
 		function setCurrentUser(authUser) {
 			user.username = authUser.username;
 			user.token = authUser.token;
-			loggedIn = true;
 			sessionStorage.setItem('username', user.username);
 			sessionStorage.setItem('token', user.token);
 		};
 
-		function getCurrentUser() {
-			return isLoggedIn() ? user : null;
-			alert(user.username);
+		function getCurrentUser(loggedIn) {
+			return loggedIn ? user : null;
 		};
 
 		function isLoggedIn() {
@@ -216,18 +242,31 @@
 		.module('app')
 		.controller('HeaderController', HeaderController);
 
-	HeaderController.$inject = ['$window', 'sessionData'];
+	HeaderController.$inject = ['$window', 'sessionData', '$rootScope'];
 
-	function HeaderController($window, sessionData) {
+	function HeaderController($window, sessionData, $rootScope) {
 		var vm = this;
-		vm.notes = 'NoTes - Your childhood is back!';
+
 
 		vm.loggedIn = sessionData.isLoggedIn();
+		vm.notes = 'NoTes - Your childhood is back!';
 
-		alert(sessionData.isLoggedIn());
+		/////////////////
 
-		/**
-		* to-do
-		*/
+		$rootScope.$watch(function(){
+				return sessionStorage.getItem('token');
+			}, function(newVal, oldVal){
+				alert('Nova Vrednost: ' + newVal + " ,stara: " + oldVal);
+				if(newVal!=oldVal) {
+					vm.loggedIn = true;
+					alert(vm.loggedIn + " " + oldVal);
+					var us = sessionData.getCurrentUser(vm.loggedIn);
+					alert('Ulogovan: ' + us.username);
+				} else {
+					vm.loggedIn = false;
+					alert(vm.loggedIn);
+				}
+			},true);
+
 	};
 })();

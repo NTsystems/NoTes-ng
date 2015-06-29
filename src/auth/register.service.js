@@ -3,11 +3,11 @@
 	
 	angular
 		.module('app.auth')
-		.factory('register', register);
+		.factory('registerservice', registerservice);
 
-	register.$inject = ['$location'];
+	registerservice.$inject = ['$location'];
 
-	function register($location) {
+	function registerservice($location) {
 		var e_mail = '';
 		var user = {};
 		var service = {
@@ -16,6 +16,8 @@
 			registerUser: registerUser,
 		};
 		return service;
+
+		///////////////
 
 		function registerUser(e_mail, password) {
 			e_mail = e_mail;

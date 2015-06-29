@@ -10,18 +10,19 @@
 	function LoginController($window, sessionData) {
 		var vm = this;
 
+		vm.login = login;
 		vm.loginTitle = "Sign In";
 
-		vm.login = function () {
+		/////////////////
+
+		function login() {
 			var authUser = {
 				username: vm.user.e_mail,
-				token: "token",
+				token: "token1",
 			};
 
 			sessionData.setCurrentUser(authUser);
-			alert(authUser.username + " " + authUser.token + " " + sessionData.isLoggedIn() + " " + sessionData.getCurrentUser());
 		};
-
 	};
 
 })();
