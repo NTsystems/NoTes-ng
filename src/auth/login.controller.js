@@ -1,3 +1,7 @@
+/**
+* Login Controller
+* @namespace Controllers
+*/
 (function () {
 	'use strict'
 
@@ -5,9 +9,9 @@
 		.module('app.auth')
 		.controller('LoginController', LoginController);
 
-	LoginController.$inject = ['$window', 'sessionData'];
+	LoginController.$inject = ['$window', 'sessionData', '$location', 'loginservice'];
 
-	function LoginController($window, sessionData) {
+	function LoginController($window, sessionData, $location, loginservice) {
 		var vm = this;
 
 		vm.login = login;
@@ -18,11 +22,26 @@
 		function login() {
 			var authUser = {
 				username: vm.user.e_mail,
-				token: "token1",
+				password: vm.user.password,
 			};
+			alert('Sending login data to server: '+ authUser.username + " " + authUser.password);
 
-			sessionData.setCurrentUser(authUser);
+			return signInUser().then(function() {
+				alert('O,o, something happened!');
+			});
+
+			function signInUser() {
+				return loginservice.loginUser(authUser)
+					.then(function(data){
+						vm.user = data;
+						$location.path('profile');
+						sessionData.setCurrentUser(vm.user);
+					})
+			}
 		};
+
+		
+
 	};
 
 })();

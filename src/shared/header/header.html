@@ -14,7 +14,7 @@
 			<ul class="nav navbar-nav navbar-right">
 				<li>
 					<a ui-sref=".signin" ng-if='!vm.loggedIn'>Sign In</a>
-					<a href="#" ng-if='vm.loggedIn'>Sign Out</a>
+					<a href="" ng-click='vm.logout()' ng-if='vm.loggedIn'>Sign Out</a>
 				</li>
 				<li>
 					<a ui-sref=".signup" ng-if='!vm.loggedIn'>Sing Up</a>
@@ -26,7 +26,7 @@
 
 <div class="jumbotron">
 	<h1>{{vm.notes}}</h1>
-	<h2 ng-if='vm.loggedIn'>Ulogovan!</h2>
+	<h2 ng-if='vm.loggedIn'>{{vm.currentUser}}</h2>
 </div>
 
 <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Lobster" />

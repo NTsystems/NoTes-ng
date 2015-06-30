@@ -1,7 +1,8 @@
 (function () {
 	'use strict';
 
-	angular.module('app', [
+	angular
+		.module('app', [
 		/*
 		* Order is not important. Angular makes a pass to register
 		* all of the modules listed and then when auth.app tries
@@ -15,6 +16,6 @@
 		*/
 		'ui.router',
 		'app.auth',
-		
-	]);
+		])
+		.constant('api_url', 'http://192.168.85.5/api/');
 })();

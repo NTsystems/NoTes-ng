@@ -1,3 +1,7 @@
+/**
+* Login Factory
+* @namespace Factories
+*/
 (function () {
 	'use strict';
 
@@ -5,18 +9,33 @@
 		.module('app.auth')
 		.factory('loginservice', loginservice);
 
-	loginservice.$inject = ['$http'];
+	loginservice.$inject = ['$http', 'api_url'];
 
-	function loginservice($http) {
+	function loginservice($http, api_url) {
 		return {
 			loginUser: loginUser,
 		};
 
-		/*
-		* TO Do
+		/**
+		* @name loginUser
+		* @param User's username&password
 		*/
-		function loginUser() {
-			return $http.post('')
+		function loginUser(authUser) {
+			var req = {
+				method: 'POST',
+			 	url: api_url + '/tokens/',
+			 	headers: {
+			 		'Content-Type': 'undefined',
+			 		'Access-Control-Allow-Origin': '*',
+			 	},
+			 	data: {
+			 		'username' : authUser.username,
+			 		'password' : authUser.password,
+			 	},
+			};
+
+
+			return $http.post(req)
 				.then(getLoggedUser)
 				.catch(getLogginFailed);
 

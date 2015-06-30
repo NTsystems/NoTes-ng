@@ -1,3 +1,7 @@
+/**
+* SessionData Factory
+* @namespace Factories
+*/
 (function () {
 	'use strict';
 
@@ -16,8 +20,9 @@
 		};
 
 		var service = {
-			setCurrentUser: setCurrentUser,
 			getCurrentUser: getCurrentUser,
+			removeCurrentUser: removeCurrentUser,
+			setCurrentUser: setCurrentUser,
 			isLoggedIn: isLoggedIn,
 		};
 
@@ -25,15 +30,24 @@
 
 		///////////////
 
+		function getCurrentUser() {
+			return loggedIn ? user : null;
+		};
+
+		function removeCurrentUser() {
+			user.username = null;
+			user.token = null;
+			sessionStorage.clear();
+			loggedIn = false;
+			alert('Not logged in anymore.' + isLoggedIn());
+		};
+
 		function setCurrentUser(authUser) {
 			user.username = authUser.username;
 			user.token = authUser.token;
 			sessionStorage.setItem('username', user.username);
 			sessionStorage.setItem('token', user.token);
-		};
-
-		function getCurrentUser(loggedIn) {
-			return loggedIn ? user : null;
+			loggedIn = true;
 		};
 
 		function isLoggedIn() {

@@ -1,3 +1,7 @@
+/**
+* Header Controller
+* @namespace Controllers
+*/
 (function () {
 	'use strict';
 
@@ -10,26 +14,30 @@
 	function HeaderController($window, sessionData, $rootScope) {
 		var vm = this;
 
-
+		vm.currentUser = '';
 		vm.loggedIn = sessionData.isLoggedIn();
+		vm.logout = logout;
 		vm.notes = 'NoTes - Your childhood is back!';
 
 		/////////////////
 
+		// watch the session storage for token
 		$rootScope.$watch(function(){
 				return sessionStorage.getItem('token');
 			}, function(newVal, oldVal){
-				alert('Nova Vrednost: ' + newVal + " ,stara: " + oldVal);
-				if(newVal!=oldVal) {
-					vm.loggedIn = true;
-					alert(vm.loggedIn + " " + oldVal);
-					var us = sessionData.getCurrentUser(vm.loggedIn);
-					alert('Ulogovan: ' + us.username);
+				if(newVal) {
+					vm.loggedIn = sessionData.isLoggedIn();
+					var user = sessionData.getCurrentUser();
+					vm.currentUser = user.username;
 				} else {
 					vm.loggedIn = false;
-					alert(vm.loggedIn);
 				}
-			},true);
+			}, true);
 
+		// remove current user
+		function logout() {
+			alert("logout");
+			sessionData.removeCurrentUser();
+		};
 	};
 })();

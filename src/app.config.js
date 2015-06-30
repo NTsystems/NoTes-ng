@@ -39,6 +39,14 @@
 						controllerAs: 'vm',
 					}
 				}
+			})
+			.state('home.profile', {
+				url: 'profile',
+				views: {
+					'content@': {
+						template: '<h2>Profil za update</h2>'
+					}
+				}
 			});
 	}
 })();

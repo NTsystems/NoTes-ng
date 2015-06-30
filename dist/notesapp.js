@@ -1,7 +1,8 @@
 (function () {
 	'use strict';
 
-	angular.module('app', [
+	angular
+		.module('app', [
 		/*
 		* Order is not important. Angular makes a pass to register
 		* all of the modules listed and then when auth.app tries
@@ -15,8 +16,8 @@
 		*/
 		'ui.router',
 		'app.auth',
-		
-	]);
+		])
+		.constant('api_url', 'http://192.168.85.5/api/');
 })();
 (function() {
 	angular
@@ -59,6 +60,14 @@
 						controllerAs: 'vm',
 					}
 				}
+			})
+			.state('home.profile', {
+				url: 'profile',
+				views: {
+					'content@': {
+						template: '<h2>Profil za update</h2>'
+					}
+				}
 			});
 	}
 })();
@@ -68,6 +77,10 @@
 
 	angular.module('app.auth', []);
 })();
+/**
+* Login Controller
+* @namespace Controllers
+*/
 (function () {
 	'use strict'
 
@@ -75,9 +88,9 @@
 		.module('app.auth')
 		.controller('LoginController', LoginController);
 
-	LoginController.$inject = ['$window', 'sessionData'];
+	LoginController.$inject = ['$window', 'sessionData', '$location', 'loginservice'];
 
-	function LoginController($window, sessionData) {
+	function LoginController($window, sessionData, $location, loginservice) {
 		var vm = this;
 
 		vm.login = login;
@@ -88,14 +101,33 @@
 		function login() {
 			var authUser = {
 				username: vm.user.e_mail,
-				token: "token1",
+				password: vm.user.password,
 			};
+			alert('Sending login data to server: '+ authUser.username + " " + authUser.password);
 
-			sessionData.setCurrentUser(authUser);
+			return signInUser().then(function() {
+				alert('O,o, something happened!');
+			});
+
+			function signInUser() {
+				return loginservice.loginUser(authUser)
+					.then(function(data){
+						vm.user = data;
+						$location.path('profile');
+						sessionData.setCurrentUser(vm.user);
+					})
+			}
 		};
+
+		
+
 	};
 
 })();
+/**
+* Login Factory
+* @namespace Factories
+*/
 (function () {
 	'use strict';
 
@@ -103,18 +135,33 @@
 		.module('app.auth')
 		.factory('loginservice', loginservice);
 
-	loginservice.$inject = ['$http'];
+	loginservice.$inject = ['$http', 'api_url'];
 
-	function loginservice($http) {
+	function loginservice($http, api_url) {
 		return {
 			loginUser: loginUser,
 		};
 
-		/*
-		* TO Do
+		/**
+		* @name loginUser
+		* @param User's username&password
 		*/
-		function loginUser() {
-			return $http.post('')
+		function loginUser(authUser) {
+			var req = {
+				method: 'POST',
+			 	url: api_url + '/tokens/',
+			 	headers: {
+			 		'Content-Type': 'undefined',
+			 		'Access-Control-Allow-Origin': '*',
+			 	},
+			 	data: {
+			 		'username' : authUser.username,
+			 		'password' : authUser.password,
+			 	},
+			};
+
+
+			return $http.post(req)
 				.then(getLoggedUser)
 				.catch(getLogginFailed);
 
@@ -131,6 +178,10 @@
 })();
 
 
+/**
+* Register Controller
+* @namespace Controllers
+*/
 (function () {
 	'use strict';
 
@@ -157,6 +208,10 @@
 	};
 	
 })();
+/**
+* Register Factory
+* @namespace Factories
+*/
 (function () {
 	'use strict';
 	
@@ -191,6 +246,10 @@
 	}
 
 })();
+/**
+* SessionData Factory
+* @namespace Factories
+*/
 (function () {
 	'use strict';
 
@@ -209,8 +268,9 @@
 		};
 
 		var service = {
-			setCurrentUser: setCurrentUser,
 			getCurrentUser: getCurrentUser,
+			removeCurrentUser: removeCurrentUser,
+			setCurrentUser: setCurrentUser,
 			isLoggedIn: isLoggedIn,
 		};
 
@@ -218,15 +278,24 @@
 
 		///////////////
 
+		function getCurrentUser() {
+			return loggedIn ? user : null;
+		};
+
+		function removeCurrentUser() {
+			user.username = null;
+			user.token = null;
+			sessionStorage.clear();
+			loggedIn = false;
+			alert('Not logged in anymore.' + isLoggedIn());
+		};
+
 		function setCurrentUser(authUser) {
 			user.username = authUser.username;
 			user.token = authUser.token;
 			sessionStorage.setItem('username', user.username);
 			sessionStorage.setItem('token', user.token);
-		};
-
-		function getCurrentUser(loggedIn) {
-			return loggedIn ? user : null;
+			loggedIn = true;
 		};
 
 		function isLoggedIn() {
@@ -235,6 +304,10 @@
 	}
 
 })();
+/**
+* Header Controller
+* @namespace Controllers
+*/
 (function () {
 	'use strict';
 
@@ -247,26 +320,30 @@
 	function HeaderController($window, sessionData, $rootScope) {
 		var vm = this;
 
-
+		vm.currentUser = '';
 		vm.loggedIn = sessionData.isLoggedIn();
+		vm.logout = logout;
 		vm.notes = 'NoTes - Your childhood is back!';
 
 		/////////////////
 
+		// watch the session storage for token
 		$rootScope.$watch(function(){
 				return sessionStorage.getItem('token');
 			}, function(newVal, oldVal){
-				alert('Nova Vrednost: ' + newVal + " ,stara: " + oldVal);
-				if(newVal!=oldVal) {
-					vm.loggedIn = true;
-					alert(vm.loggedIn + " " + oldVal);
-					var us = sessionData.getCurrentUser(vm.loggedIn);
-					alert('Ulogovan: ' + us.username);
+				if(newVal) {
+					vm.loggedIn = sessionData.isLoggedIn();
+					var user = sessionData.getCurrentUser();
+					vm.currentUser = user.username;
 				} else {
 					vm.loggedIn = false;
-					alert(vm.loggedIn);
 				}
-			},true);
+			}, true);
 
+		// remove current user
+		function logout() {
+			alert("logout");
+			sessionData.removeCurrentUser();
+		};
 	};
 })();
