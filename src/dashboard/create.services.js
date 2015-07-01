@@ -5,44 +5,51 @@
 		.module('app.notebook')
 		.factory('notebookFactory', notebookFactory);
 
-	notebookFactory.$inject = ['$http', '$q'];
+	notebookFactory.$inject = ['$http', 'api_url'];
 
-	function notebookFactory($http, $q) {
-		var url = 'http://192.168.85.5:8000/api';
+	function notebookFactory($http, api) {
 		var title = {
-			getAllNotebooks: getAllNotebooks,
+			getNotebooks: getNotebooks,
 			createTitle: createTitle
 		};
 
 		return title;
 
-		function getAllNotebooks() {
-			var defer = $q.defer();
-			$http.get(url + '/notebooks')
-			.success(function(response){
-				defer.resolve(response);
-			})
-			.error(function(error, status){
-				defer.reject(error);
-			})
+		function getNotebooks() {
+			return $http.get(api + '/notebooks', {
+				headers: {
+					'Authorization': 'Basic 57ec639cf65271e77174f6d6fb84d8afa6ca99df'
+				}})
+				.then(getNotebooksSuccess)
+				.catch(getNotebooksError);
 
-			return defer.promise;
+			function getNotebooksSuccess(response) {
+				return response.data;
+			}
+
+			function getNotebooksError(error) {
+				notebookFactory.error(error.data);
+			}
 		}
 
 		function createTitle(title) {
-			var defer = $q.defer();
-			$http.post(url + '/notebooks', title)
-			.success(function(response){
-				defer.resolve(response);
-			})
-			.error(function(error, status){
-				defer.reject(error);
-			})
+			return $http.post(api + '/notebooks', title, {
+				headers: {
+					'Authorization': 'Basic 57ec639cf65271e77174f6d6fb84d8afa6ca99df'
+				}})
+				.then(createNotebook)
+				.catch(createNotebookError);
+			
+			function createNotebook(response) {
+				return response.data;
+			}
 
-			return defer.promise;
+			function createNotebookError(error) {
+				//error
+			}
+
+
 		}
-
-
 	}
 
 })(); 

@@ -18,16 +18,18 @@
   }
 
 .panel-primary {
-  border-color: #ddd; 
+  	border-color: #ddd; 
 }
 
 .panel-primary > .panel-heading {
-  color: #333;
-  background-color: #f5f5f5;
-  border-color: #ddd;
+  	color: #333;
+  	background-color: #f5f5f5;
+  	border-color: #ddd;
  }
 
 .create-dialog {
+	background-image: url('../../assets/images/notebook.jpg');
+	background-size: cover;
 	border-radius: 10px;
 	box-shadow: 0 0 10px rgba(0,0,0,0.4);
 	padding-top: 10px;
@@ -37,6 +39,9 @@
 
 	margin: 50px 0 0 0;
 	font-weight: 300;
+}
+.text-center {
+	color: darkorange;
 }
 
 .btn-primary {

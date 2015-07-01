@@ -9,14 +9,14 @@
 
 	function CreateController(notebookFactory) {
 		var vm = this;
-		vm.name = [];
+		vm.createNotebook = createNotebook;
+		vm.notebook = [];
 		
-		function create() {
-		    vm.create = notebookFactory.createTitle(title)
-		    	.then(function(name) {
-		    		vm.name.push(name);
+		function createNotebook(title) {
+		    notebookFactory.createTitle()
+		    	.then(function(response) {
+		    		vm.notebook = title;
 		    	});
-
 		};
 
 

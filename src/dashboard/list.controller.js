@@ -9,9 +9,14 @@
 
 	function ListController(notebookFactory) {
 		var vm = this;
-		
-		function list() {
-		    vm.list = notebookFactory.notebook.push(title);
+		vm.getNotebooks = [];
+
+		function getAllNotebooks() {
+			notebookFactory.getNotebooks()
+			.then(function(data) {
+				vm.getNotebooks = data;
+				return vm.getNotebooks;
+			});
 		};
 
 

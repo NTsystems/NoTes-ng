@@ -12,8 +12,8 @@
 		      views: {
 		      	'header': {
 		      		templateUrl: 'src/shared/header/header.html',
-		      		controller: 'AuthController',
-		      		controllerAs: 'vm',
+		      		// controller: 'AuthController',
+		      		// controllerAs: 'vm',
 		      	},
 		      	'footer': {
 		      		templateUrl: 'src/shared/footer/footer.html'
@@ -25,8 +25,8 @@
 				views: {
 					'content@': {
 						templateUrl: "src/auth/partials/auth.view.html",
-						controller: 'AuthController',
-						controllerAs: 'vm',
+						// controller: 'AuthController',
+						// controllerAs: 'vm',
 					}
 				}
 			})

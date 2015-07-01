@@ -3,9 +3,9 @@
 		<div class="col-md-3">
 			<div class="panel panel-default">
 				<div class="panel-heading">A list of all notebooks</div>
-				<div class="panel-body">
-					<ul ng-repeat="l in list">
-						<li><a ui-sref="#">{{l.title}}</a></li>
+				<div class="panel-body" ng-controller='ListController'>
+					<ul ng-repeat="list in getNotebooks">
+						<li><a ui-sref="#">{{list.title}}</a></li>
 					</ul>
 					<a ui-sref="home.create-notebook" type="submit" class="btn btn-primary">Create</a>
 					<a ui-sref="home.list-notebook" class="btn btn-danger">Delete</a>
@@ -24,6 +24,7 @@
 							<ul ng-repeat="note in notes"
 								<a ui-sref="#" class="btn btn-info btn-lg" role="button">{{note}}</a>
 							</ul>
+							<textarea rows = '5' cols = '5'>tekst</textarea>
 						</div>
 					</div>	
 				</div>
