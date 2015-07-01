@@ -16,5 +16,6 @@
 		'ui.router',
 		'app.auth',
 		'app.notebook',
-	]);
+	])
+		.constant('api_url', 'http://192.168.85.5/api');
 })();
