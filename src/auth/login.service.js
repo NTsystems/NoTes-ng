@@ -1,5 +1,5 @@
 /**
-* Login Factory
+* Login service Factory
 * @namespace Factories
 */
 (function () {
@@ -9,9 +9,9 @@
 		.module('app.auth')
 		.factory('loginservice', loginservice);
 
-	loginservice.$inject = ['$http', 'api_url'];
+	loginservice.$inject = ['$http', 'api_url', 'sessionData', '$location'];
 
-	function loginservice($http, api_url) {
+	function loginservice($http, api_url, sessionData, $location) {
 		return {
 			loginUser: loginUser,
 		};
@@ -21,31 +21,29 @@
 		* @param User's username&password
 		*/
 		function loginUser(authUser) {
-			var req = {
-				method: 'POST',
-			 	url: api_url + '/tokens/',
-			 	headers: {
-			 		'Content-Type': 'undefined',
-			 		'Access-Control-Allow-Origin': '*',
-			 	},
-			 	data: {
-			 		'username' : authUser.username,
+			console.log(authUser);
+
+			return $http.post(api_url+'tokens/', {
+			 		'e_mail' : authUser.username,
 			 		'password' : authUser.password,
-			 	},
+			 	})
+				.then(getTokenCompleted)
+				.catch(getTokenFailed);
+
+
+			function getTokenCompleted(response) {
+				console.log('Response is: ', response);
+				if(response != null){
+					authUser.token = response.data;
+					sessionData.setCurrentUser(authUser);
+					$location.path('profile');
+				}
 			};
 
+			function getTokenFailed(error) {
+				console.log('User sign in failed.', error);
+			};
 
-			return $http.post(req)
-				.then(getLoggedUser)
-				.catch(getLogginFailed);
-
-			function getLoggedUser(response) {
-				return response.data.results;
-			}
-
-			function getLogginFailed(error) {
-				alert(error.data);
-			}
 		}
 	}
 

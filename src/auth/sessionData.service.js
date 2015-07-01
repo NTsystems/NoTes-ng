@@ -1,5 +1,5 @@
 /**
-* SessionData Factory
+* SessionData service Factory
 * @namespace Factories
 */
 (function () {
@@ -39,7 +39,7 @@
 			user.token = null;
 			sessionStorage.clear();
 			loggedIn = false;
-			alert('Not logged in anymore.' + isLoggedIn());
+			console.log('Not logged in anymore. ', isLoggedIn());
 		};
 
 		function setCurrentUser(authUser) {

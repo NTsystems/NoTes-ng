@@ -65,7 +65,7 @@
 				url: 'profile',
 				views: {
 					'content@': {
-						template: '<h2>Profil za update</h2>'
+						templateUrl: 'src/auth/partials/profile.view.html'
 					}
 				}
 			});
@@ -103,20 +103,8 @@
 				username: vm.user.e_mail,
 				password: vm.user.password,
 			};
-			alert('Sending login data to server: '+ authUser.username + " " + authUser.password);
 
-			return signInUser().then(function() {
-				alert('O,o, something happened!');
-			});
-
-			function signInUser() {
-				return loginservice.loginUser(authUser)
-					.then(function(data){
-						vm.user = data;
-						$location.path('profile');
-						sessionData.setCurrentUser(vm.user);
-					})
-			}
+			loginservice.loginUser(authUser);
 		};
 
 		
@@ -125,7 +113,7 @@
 
 })();
 /**
-* Login Factory
+* Login service Factory
 * @namespace Factories
 */
 (function () {
@@ -135,9 +123,9 @@
 		.module('app.auth')
 		.factory('loginservice', loginservice);
 
-	loginservice.$inject = ['$http', 'api_url'];
+	loginservice.$inject = ['$http', 'api_url', 'sessionData', '$location'];
 
-	function loginservice($http, api_url) {
+	function loginservice($http, api_url, sessionData, $location) {
 		return {
 			loginUser: loginUser,
 		};
@@ -147,36 +135,51 @@
 		* @param User's username&password
 		*/
 		function loginUser(authUser) {
-			var req = {
-				method: 'POST',
-			 	url: api_url + '/tokens/',
-			 	headers: {
-			 		'Content-Type': 'undefined',
-			 		'Access-Control-Allow-Origin': '*',
-			 	},
-			 	data: {
-			 		'username' : authUser.username,
+			console.log(authUser);
+
+			return $http.post(api_url+'tokens/', {
+			 		'e_mail' : authUser.username,
 			 		'password' : authUser.password,
-			 	},
+			 	})
+				.then(getTokenCompleted)
+				.catch(getTokenFailed);
+
+
+			function getTokenCompleted(response) {
+				console.log('Response is: ', response);
+				if(response != null){
+					authUser.token = response.data;
+					sessionData.setCurrentUser(authUser);
+					$location.path('profile');
+				}
 			};
 
+			function getTokenFailed(error) {
+				console.log('User sign in failed.', error);
+			};
 
-			return $http.post(req)
-				.then(getLoggedUser)
-				.catch(getLogginFailed);
-
-			function getLoggedUser(response) {
-				return response.data.results;
-			}
-
-			function getLogginFailed(error) {
-				alert(error.data);
-			}
 		}
 	}
 
 })();
+/**
+* Profile Controller
+* @namespace Controllers
+*/
+(function () {
+	'use strict';
 
+	angular
+		.module('app.auth')
+		.controller('ProfileController', ProfileController);
+
+	ProfileController.$inject = [];
+
+	function ProfileController() {
+		var vm = this;
+	};
+
+})();
 
 /**
 * Register Controller
@@ -209,7 +212,7 @@
 	
 })();
 /**
-* Register Factory
+* Register service Factory
 * @namespace Factories
 */
 (function () {
@@ -239,7 +242,7 @@
 			user.e_mail = e_mail;
 			user.password = password;
 			$location.path('/home/');
-			alert(user.e_mail + " and " + user.password);
+			console.log(user.e_mail + " and " + user.password);
 		};
 
 
@@ -247,7 +250,7 @@
 
 })();
 /**
-* SessionData Factory
+* SessionData service Factory
 * @namespace Factories
 */
 (function () {
@@ -287,7 +290,7 @@
 			user.token = null;
 			sessionStorage.clear();
 			loggedIn = false;
-			alert('Not logged in anymore.' + isLoggedIn());
+			console.log('Not logged in anymore. ', isLoggedIn());
 		};
 
 		function setCurrentUser(authUser) {
@@ -327,14 +330,20 @@
 
 		/////////////////
 
-		// watch the session storage for token
+		/**
+		* @name Watch the session storage for token
+		* @param Token from session storage
+		*/
 		$rootScope.$watch(function(){
 				return sessionStorage.getItem('token');
 			}, function(newVal, oldVal){
 				if(newVal) {
 					vm.loggedIn = sessionData.isLoggedIn();
+					console.log('Login status is false: ', vm.loggedIn);
 					var user = sessionData.getCurrentUser();
-					vm.currentUser = user.username;
+					if(user != null) {
+						vm.currentUser = user.username;
+					}
 				} else {
 					vm.loggedIn = false;
 				}

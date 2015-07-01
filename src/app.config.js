@@ -44,7 +44,7 @@
 				url: 'profile',
 				views: {
 					'content@': {
-						template: '<h2>Profil za update</h2>'
+						templateUrl: 'src/auth/partials/profile.view.html'
 					}
 				}
 			});

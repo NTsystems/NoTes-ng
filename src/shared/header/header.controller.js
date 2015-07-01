@@ -21,14 +21,20 @@
 
 		/////////////////
 
-		// watch the session storage for token
+		/**
+		* @name Watch the session storage for token
+		* @param Token from session storage
+		*/
 		$rootScope.$watch(function(){
 				return sessionStorage.getItem('token');
 			}, function(newVal, oldVal){
 				if(newVal) {
 					vm.loggedIn = sessionData.isLoggedIn();
+					console.log('Login status is false: ', vm.loggedIn);
 					var user = sessionData.getCurrentUser();
-					vm.currentUser = user.username;
+					if(user != null) {
+						vm.currentUser = user.username;
+					}
 				} else {
 					vm.loggedIn = false;
 				}

@@ -1,5 +1,5 @@
 /**
-* Register Factory
+* Register service Factory
 * @namespace Factories
 */
 (function () {
@@ -29,7 +29,7 @@
 			user.e_mail = e_mail;
 			user.password = password;
 			$location.path('/home/');
-			alert(user.e_mail + " and " + user.password);
+			console.log(user.e_mail + " and " + user.password);
 		};
 
 

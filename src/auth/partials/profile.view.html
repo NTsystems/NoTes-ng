@@ -1,1 +1,53 @@
-<div><h2>Ovde sam da vidim svoj profil za update.</h2></div>
+<div class="container">
+	<div class="row">
+		<div class="media">
+			<div class="media-left">
+				<img src="assets/images/profile.jpg" alt="..." class="media-object">
+			</div>
+			<div class="media-body">
+				<h4 class="media-heading">Welcome <mark>{{vm.user.e_mail}}</mark></h4>
+				<h5>Here you can update your profile.</h5>
+				<h3><span class="label label-info">In current Beta version it's still not possible to change your password.</span></h3>
+			</div>
+		</div>
+	</div>
+	<br>
+	<div class="row">
+		<form class="form-horizontal" ng-submit="vm.update()" role=form>
+			<div class="form-group">
+				<label class="col-md-4 text-right" for="first_name">First name</label>
+				<div class="col-md-8">
+					<input class="form-control" type="text" id="first_name" ng-model="vm.user.first_name">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-md-4 text-right" for="last_name">Last name</label>
+				<div class="col-md-8">
+					<input class="form-control" type="text" id="last_name" ng-model="vm.user.last_name">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-md-4 text-right" for="date_of_birth">Date of birth</label>
+				<div class="col-md-8">
+					<input class="form-control datepicker" data-date-format="dd/mm/yyyy" type="text" id="date_of_birth" ng-model="vm.user.date_of_birth" placeholder="dd/mm/yyyy">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-md-4 text-right" for="place">Place</label>
+				<div class="col-md-8">
+					<input class="form-control" type="text" id="place" ng-model="vm.user.place">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-md-4 text-right" for="state">State</label>
+				<div class="col-md-8">
+					<input class="form-control" type="text" id="state" ng-model="vm.user.state">
+				</div>
+			</div>
+			<div class="form-actions col-md-4 col-md-offset-4">
+	            <button type="submit" class="btn btn-primary">Confirm Update</button>
+	            <a ui-sref="home" class="btn btn-link">Cancel</a>
+	        </div>
+		</form>
+	</div>
+</div>
