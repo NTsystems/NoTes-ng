@@ -25,7 +25,7 @@
 				password: vm.user.password,
 			};
 
-			loginservice.loginUser(authUser);
+			return loginservice.loginUser(authUser);
 		};
 
 		

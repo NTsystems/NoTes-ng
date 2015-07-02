@@ -17,7 +17,7 @@
 		'ui.router',
 		'app.auth',
 		])
-		.constant('api_url', 'http://192.168.85.5/api/');
+		.constant('api_url', 'http://127.0.0.1:81/api/');
 })();
 (function() {
 	angular
@@ -65,7 +65,9 @@
 				url: 'profile',
 				views: {
 					'content@': {
-						templateUrl: 'src/auth/partials/profile.view.html'
+						templateUrl: 'src/auth/partials/profile.view.html',
+						controller: 'ProfileController',
+						controllerAs: 'vm',
 					}
 				}
 			});
@@ -104,7 +106,7 @@
 				password: vm.user.password,
 			};
 
-			loginservice.loginUser(authUser);
+			return loginservice.loginUser(authUser);
 		};
 
 		
@@ -139,7 +141,7 @@
 
 			return $http.post(api_url+'tokens/', {
 			 		'e_mail' : authUser.username,
-			 		'password' : authUser.password,
+			 		'password' : authUser.password
 			 	})
 				.then(getTokenCompleted)
 				.catch(getTokenFailed);
@@ -173,10 +175,15 @@
 		.module('app.auth')
 		.controller('ProfileController', ProfileController);
 
-	ProfileController.$inject = [];
+	ProfileController.$inject = ['$window', 'sessionData'];
 
-	function ProfileController() {
+	function ProfileController($window, sessionData) {
 		var vm = this;
+		if(sessionStorage.getItem('token')){
+			vm.loggedIn = true;
+			var user = sessionData.getCurrentUser();
+			vm.e_mail = user.username;
+		};
 	};
 
 })();
@@ -263,8 +270,6 @@
 	sessionData.$inject = ['$window', '$rootScope'];
 
 	function sessionData($window, $rootScope) {
-		var loggedIn = false;
-
 		var user = {
 			username: sessionStorage.getItem('username'),
 			token: sessionStorage.getItem('token'),
@@ -274,7 +279,7 @@
 			getCurrentUser: getCurrentUser,
 			removeCurrentUser: removeCurrentUser,
 			setCurrentUser: setCurrentUser,
-			isLoggedIn: isLoggedIn,
+			//isLoggedIn: isLoggedIn,
 		};
 
 		return service;
@@ -282,15 +287,13 @@
 		///////////////
 
 		function getCurrentUser() {
-			return loggedIn ? user : null;
+			return sessionStorage.getItem('token') ? user : null;
 		};
 
 		function removeCurrentUser() {
 			user.username = null;
 			user.token = null;
 			sessionStorage.clear();
-			loggedIn = false;
-			console.log('Not logged in anymore. ', isLoggedIn());
 		};
 
 		function setCurrentUser(authUser) {
@@ -298,12 +301,11 @@
 			user.token = authUser.token;
 			sessionStorage.setItem('username', user.username);
 			sessionStorage.setItem('token', user.token);
-			loggedIn = true;
 		};
 
-		function isLoggedIn() {
-			return loggedIn;
-		};
+//		function isLoggedIn() {
+//			return loggedIn;
+//		};
 	}
 
 })();
@@ -323,12 +325,15 @@
 	function HeaderController($window, sessionData, $rootScope) {
 		var vm = this;
 
-		vm.currentUser = '';
-		vm.loggedIn = sessionData.isLoggedIn();
+		if(sessionStorage.getItem('token')){
+			vm.currentUser = sessionData.getCurrentUser();
+			vm.loggedIn = true;
+		}
 		vm.logout = logout;
 		vm.notes = 'NoTes - Your childhood is back!';
 
 		/////////////////
+
 
 		/**
 		* @name Watch the session storage for token
@@ -337,17 +342,20 @@
 		$rootScope.$watch(function(){
 				return sessionStorage.getItem('token');
 			}, function(newVal, oldVal){
+				console.log(newVal, oldVal);
 				if(newVal) {
-					vm.loggedIn = sessionData.isLoggedIn();
-					console.log('Login status is false: ', vm.loggedIn);
 					var user = sessionData.getCurrentUser();
+					console.log(user);
 					if(user != null) {
 						vm.currentUser = user.username;
+						vm.loggedIn = true;
 					}
 				} else {
 					vm.loggedIn = false;
+					console.log('Login status is false.');
 				}
 			}, true);
+
 
 		// remove current user
 		function logout() {

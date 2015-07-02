@@ -44,7 +44,9 @@
 				url: 'profile',
 				views: {
 					'content@': {
-						templateUrl: 'src/auth/partials/profile.view.html'
+						templateUrl: 'src/auth/partials/profile.view.html',
+						controller: 'ProfileController',
+						controllerAs: 'vm',
 					}
 				}
 			});

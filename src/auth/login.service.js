@@ -25,7 +25,7 @@
 
 			return $http.post(api_url+'tokens/', {
 			 		'e_mail' : authUser.username,
-			 		'password' : authUser.password,
+			 		'password' : authUser.password
 			 	})
 				.then(getTokenCompleted)
 				.catch(getTokenFailed);

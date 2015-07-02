@@ -12,8 +12,6 @@
 	sessionData.$inject = ['$window', '$rootScope'];
 
 	function sessionData($window, $rootScope) {
-		var loggedIn = false;
-
 		var user = {
 			username: sessionStorage.getItem('username'),
 			token: sessionStorage.getItem('token'),
@@ -23,7 +21,7 @@
 			getCurrentUser: getCurrentUser,
 			removeCurrentUser: removeCurrentUser,
 			setCurrentUser: setCurrentUser,
-			isLoggedIn: isLoggedIn,
+			//isLoggedIn: isLoggedIn,
 		};
 
 		return service;
@@ -31,15 +29,13 @@
 		///////////////
 
 		function getCurrentUser() {
-			return loggedIn ? user : null;
+			return sessionStorage.getItem('token') ? user : null;
 		};
 
 		function removeCurrentUser() {
 			user.username = null;
 			user.token = null;
 			sessionStorage.clear();
-			loggedIn = false;
-			console.log('Not logged in anymore. ', isLoggedIn());
 		};
 
 		function setCurrentUser(authUser) {
@@ -47,12 +43,11 @@
 			user.token = authUser.token;
 			sessionStorage.setItem('username', user.username);
 			sessionStorage.setItem('token', user.token);
-			loggedIn = true;
 		};
 
-		function isLoggedIn() {
-			return loggedIn;
-		};
+//		function isLoggedIn() {
+//			return loggedIn;
+//		};
 	}
 
 })();

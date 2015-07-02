@@ -1,11 +1,11 @@
-<div class="container">
+<div class="container" ng-if="vm.loggedIn">
 	<div class="row">
 		<div class="media">
 			<div class="media-left">
 				<img src="assets/images/profile.jpg" alt="..." class="media-object">
 			</div>
 			<div class="media-body">
-				<h4 class="media-heading">Welcome <mark>{{vm.user.e_mail}}</mark></h4>
+				<h4 class="media-heading">Welcome <mark>{{vm.e_mail}}</mark></h4>
 				<h5>Here you can update your profile.</h5>
 				<h3><span class="label label-info">In current Beta version it's still not possible to change your password.</span></h3>
 			</div>

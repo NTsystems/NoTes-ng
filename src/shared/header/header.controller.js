@@ -14,12 +14,15 @@
 	function HeaderController($window, sessionData, $rootScope) {
 		var vm = this;
 
-		vm.currentUser = '';
-		vm.loggedIn = sessionData.isLoggedIn();
+		if(sessionStorage.getItem('token')){
+			vm.currentUser = sessionData.getCurrentUser();
+			vm.loggedIn = true;
+		}
 		vm.logout = logout;
 		vm.notes = 'NoTes - Your childhood is back!';
 
 		/////////////////
+
 
 		/**
 		* @name Watch the session storage for token
@@ -28,17 +31,20 @@
 		$rootScope.$watch(function(){
 				return sessionStorage.getItem('token');
 			}, function(newVal, oldVal){
+				console.log(newVal, oldVal);
 				if(newVal) {
-					vm.loggedIn = sessionData.isLoggedIn();
-					console.log('Login status is false: ', vm.loggedIn);
 					var user = sessionData.getCurrentUser();
+					console.log(user);
 					if(user != null) {
 						vm.currentUser = user.username;
+						vm.loggedIn = true;
 					}
 				} else {
 					vm.loggedIn = false;
+					console.log('Login status is false.');
 				}
 			}, true);
+
 
 		// remove current user
 		function logout() {
