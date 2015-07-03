@@ -1,6 +1,7 @@
 /**
 * Register Controller
 * @namespace Controllers
+* @author Olgica Djuric
 */
 (function () {
 	'use strict';
@@ -21,7 +22,12 @@
 		//////////////////////////
 
 		function register() {
-		    registerservice.registerUser(vm.user.e_mail, vm.user.password);
+			var regUser = {
+				'username': vm.user.e_mail,
+				'password': vm.user.password
+			};
+		    
+		    return registerservice.registerUser(regUser);
 		};
 
 

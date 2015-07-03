@@ -1,6 +1,7 @@
 /**
 * Register service Factory
 * @namespace Factories
+* @author Olgica Djuric
 */
 (function () {
 	'use strict';
@@ -9,30 +10,35 @@
 		.module('app.auth')
 		.factory('registerservice', registerservice);
 
-	registerservice.$inject = ['$location'];
+	registerservice.$inject = ['api_url', '$location', '$http'];
 
-	function registerservice($location) {
-		var e_mail = '';
-		var user = {};
-		var service = {
-			e_mail: e_mail,
-			password: password,
+	function registerservice(api_url, $location, $http) {
+
+		return {
 			registerUser: registerUser,
 		};
-		return service;
 
 		///////////////
 
-		function registerUser(e_mail, password) {
-			e_mail = e_mail;
-			password = password;
-			user.e_mail = e_mail;
-			user.password = password;
-			$location.path('/home/');
-			console.log(user.e_mail + " and " + user.password);
+		function registerUser(regUser) {
+			console.log(regUser);
+
+			return $http.post(api_url + 'users/', {
+				'e_mail': regUser.username,
+				'password': regUser.password
+			})
+			.then(getSignUpCompleted)
+			.catch(getSignUpFailed);
+
+			function getSignUpCompleted(response) {
+				console.log('Sign Up successful. ', response);
+				$location.path('/home/');
+			};
+
+			function getSignUpFailed(error) {
+				console.log('Sign Up failed. ', error);
+			};
+
 		};
-
-
 	}
-
 })();

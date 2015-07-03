@@ -1,6 +1,7 @@
 /**
 * SessionData service Factory
 * @namespace Factories
+* @author Olgica Djuric
 */
 (function () {
 	'use strict';

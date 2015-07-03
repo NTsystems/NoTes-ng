@@ -1,6 +1,7 @@
 /**
 * Profile Controller
 * @namespace Controllers
+* @author Olgica Djuric
 */
 (function () {
 	'use strict';
@@ -15,7 +16,7 @@
 		var vm = this;
 
 		/**
-		* @name set value for current user
+		* @desc Sets value for current user
 		*/
 		if(sessionStorage.getItem('token')){
 			vm.loggedIn = true;

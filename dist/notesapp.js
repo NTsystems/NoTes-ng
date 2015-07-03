@@ -12,12 +12,11 @@
 		* Everybody has access to these.
 		* We could place these under every feature area,
 		* but this is easier to maintain.
-		* 'auth.app'
 		*/
 		'ui.router',
 		'app.auth',
 		])
-		.constant('api_url', 'http://127.0.0.1:81/api/');
+		.constant('api_url', 'http://127.0.0.1:8081/api/');
 })();
 (function() {
 	angular
@@ -82,6 +81,7 @@
 /**
 * Login Controller
 * @namespace Controllers
+* @author Olgica Djuric
 */
 (function () {
 	'use strict'
@@ -117,6 +117,7 @@
 /**
 * Login service Factory
 * @namespace Factories
+* @author Olgica Djuric
 */
 (function () {
 	'use strict';
@@ -128,25 +129,34 @@
 	loginservice.$inject = ['$http', 'api_url', 'sessionData', '$location'];
 
 	function loginservice($http, api_url, sessionData, $location) {
+		
 		return {
 			loginUser: loginUser,
 		};
 
+
+		/////////////////////////
+
+		
 		/**
 		* @name loginUser
-		* @param User's username&password
+		* @param {JSON} user's e_mail&password
 		*/
 		function loginUser(authUser) {
 			console.log(authUser);
 
-			return $http.post(api_url+'tokens/', {
+			return $http.post(api_url + 'tokens/', {
 			 		'e_mail' : authUser.username,
 			 		'password' : authUser.password
 			 	})
 				.then(getTokenCompleted)
 				.catch(getTokenFailed);
 
-
+			/**
+			* @name getTokenCompleted
+			* @desc Login request successful
+			* @returns {String}
+			*/
 			function getTokenCompleted(response) {
 				console.log('Response is: ', response);
 				if(response != null){
@@ -167,6 +177,7 @@
 /**
 * Profile Controller
 * @namespace Controllers
+* @author Olgica Djuric
 */
 (function () {
 	'use strict';
@@ -179,6 +190,10 @@
 
 	function ProfileController($window, sessionData) {
 		var vm = this;
+
+		/**
+		* @desc Sets value for current user
+		*/
 		if(sessionStorage.getItem('token')){
 			vm.loggedIn = true;
 			var user = sessionData.getCurrentUser();
@@ -191,6 +206,7 @@
 /**
 * Register Controller
 * @namespace Controllers
+* @author Olgica Djuric
 */
 (function () {
 	'use strict';
@@ -211,7 +227,12 @@
 		//////////////////////////
 
 		function register() {
-		    registerservice.registerUser(vm.user.e_mail, vm.user.password);
+			var regUser = {
+				'username': vm.user.e_mail,
+				'password': vm.user.password
+			};
+		    
+		    return registerservice.registerUser(regUser);
 		};
 
 
@@ -221,6 +242,7 @@
 /**
 * Register service Factory
 * @namespace Factories
+* @author Olgica Djuric
 */
 (function () {
 	'use strict';
@@ -229,36 +251,42 @@
 		.module('app.auth')
 		.factory('registerservice', registerservice);
 
-	registerservice.$inject = ['$location'];
+	registerservice.$inject = ['api_url', '$location', '$http'];
 
-	function registerservice($location) {
-		var e_mail = '';
-		var user = {};
-		var service = {
-			e_mail: e_mail,
-			password: password,
+	function registerservice(api_url, $location, $http) {
+
+		return {
 			registerUser: registerUser,
 		};
-		return service;
 
 		///////////////
 
-		function registerUser(e_mail, password) {
-			e_mail = e_mail;
-			password = password;
-			user.e_mail = e_mail;
-			user.password = password;
-			$location.path('/home/');
-			console.log(user.e_mail + " and " + user.password);
+		function registerUser(regUser) {
+			console.log(regUser);
+
+			return $http.post(api_url + 'users/', {
+				'e_mail': regUser.username,
+				'password': regUser.password
+			})
+			.then(getSignUpCompleted)
+			.catch(getSignUpFailed);
+
+			function getSignUpCompleted(response) {
+				console.log('Sign Up successful. ', response);
+				$location.path('/home/');
+			};
+
+			function getSignUpFailed(error) {
+				console.log('Sign Up failed. ', error);
+			};
+
 		};
-
-
 	}
-
 })();
 /**
 * SessionData service Factory
 * @namespace Factories
+* @author Olgica Djuric
 */
 (function () {
 	'use strict';

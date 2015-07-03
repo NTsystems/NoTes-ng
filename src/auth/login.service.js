@@ -1,6 +1,7 @@
 /**
 * Login service Factory
 * @namespace Factories
+* @author Olgica Djuric
 */
 (function () {
 	'use strict';
@@ -12,25 +13,34 @@
 	loginservice.$inject = ['$http', 'api_url', 'sessionData', '$location'];
 
 	function loginservice($http, api_url, sessionData, $location) {
+		
 		return {
 			loginUser: loginUser,
 		};
 
+
+		/////////////////////////
+
+		
 		/**
 		* @name loginUser
-		* @param User's username&password
+		* @param {JSON} user's e_mail&password
 		*/
 		function loginUser(authUser) {
 			console.log(authUser);
 
-			return $http.post(api_url+'tokens/', {
+			return $http.post(api_url + 'tokens/', {
 			 		'e_mail' : authUser.username,
 			 		'password' : authUser.password
 			 	})
 				.then(getTokenCompleted)
 				.catch(getTokenFailed);
 
-
+			/**
+			* @name getTokenCompleted
+			* @desc Login request successful
+			* @returns {String}
+			*/
 			function getTokenCompleted(response) {
 				console.log('Response is: ', response);
 				if(response != null){

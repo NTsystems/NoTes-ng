@@ -12,10 +12,9 @@
 		* Everybody has access to these.
 		* We could place these under every feature area,
 		* but this is easier to maintain.
-		* 'auth.app'
 		*/
 		'ui.router',
 		'app.auth',
 		])
-		.constant('api_url', 'http://127.0.0.1:81/api/');
+		.constant('api_url', 'http://127.0.0.1:8081/api/');
 })();

@@ -1,6 +1,7 @@
 /**
 * Login Controller
 * @namespace Controllers
+* @author Olgica Djuric
 */
 (function () {
 	'use strict'
