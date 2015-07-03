@@ -1,11 +1,11 @@
 <div class="conteiner-fluid">
-	<div class="row">
-		<div class="col-md-3">
-			<div class="panel panel-default">
+	<div class="row-fluid">
+		<div class="col-md-3"  ng-controller='ListController'>
+			<div class="panel panel-default" ng-submit="vm.getAllNotebooks()">
 				<div class="panel-heading">A list of all notebooks</div>
-				<div class="panel-body" ng-controller='ListController'>
-					<ul ng-repeat="list in getNotebooks">
-						<li><a ui-sref="#">{{list.title}}</a></li>
+				<div class="panel-body">
+					<ul ng-repeat="note in vm.notebooks">
+						<li><a ui-sref="#">{{note.name}}</a></li>
 					</ul>
 					<a ui-sref="home.create-notebook" type="submit" class="btn btn-primary">Create</a>
 					<a ui-sref="home.list-notebook" class="btn btn-danger">Delete</a>
@@ -24,7 +24,6 @@
 							<ul ng-repeat="note in notes"
 								<a ui-sref="#" class="btn btn-info btn-lg" role="button">{{note}}</a>
 							</ul>
-							<textarea rows = '5' cols = '5'>tekst</textarea>
 						</div>
 					</div>	
 				</div>

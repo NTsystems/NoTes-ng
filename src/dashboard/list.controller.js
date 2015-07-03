@@ -9,13 +9,13 @@
 
 	function ListController(notebookFactory) {
 		var vm = this;
-		vm.getNotebooks = [];
+		vm.getAllNotebooks = getAllNotebooks;
 
 		function getAllNotebooks() {
 			notebookFactory.getNotebooks()
-			.then(function(data) {
-				vm.getNotebooks = data;
-				return vm.getNotebooks;
+				.then(function(response) {
+					vm.notebooks = notebook.list;
+					return vm.notebooks;
 			});
 		};
 

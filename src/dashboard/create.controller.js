@@ -10,12 +10,12 @@
 	function CreateController(notebookFactory) {
 		var vm = this;
 		vm.createNotebook = createNotebook;
-		vm.notebook = [];
 		
-		function createNotebook(title) {
-		    notebookFactory.createTitle()
+		function createNotebook() {
+		    notebookFactory.createTitle(vm.name)
 		    	.then(function(response) {
-		    		vm.notebook = title;
+		    		vm.notebook = vm.name;
+		    		alert(vm.notebook);
 		    	});
 		};
 

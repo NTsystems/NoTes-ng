@@ -17,5 +17,5 @@
 		'app.auth',
 		'app.notebook',
 	])
-		.constant('api_url', 'http://192.168.85.5/api');
+		.constant('api_url', 'http://127.0.0.1:8081/api');
 })();

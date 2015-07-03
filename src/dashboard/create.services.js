@@ -8,23 +8,26 @@
 	notebookFactory.$inject = ['$http', 'api_url'];
 
 	function notebookFactory($http, api) {
-		var title = {
+		var notebook = {
 			getNotebooks: getNotebooks,
 			createTitle: createTitle
 		};
 
-		return title;
+		return notebook;
+
+		notebook.list = [];
+
 
 		function getNotebooks() {
-			return $http.get(api + '/notebooks', {
+			return $http.get(api + '/notebooks/', {
 				headers: {
-					'Authorization': 'Basic 57ec639cf65271e77174f6d6fb84d8afa6ca99df'
+					'Authorization': 'Token bbc7f7b5492468db6a4a54a00c1b504930371792'
 				}})
 				.then(getNotebooksSuccess)
 				.catch(getNotebooksError);
 
 			function getNotebooksSuccess(response) {
-				return response.data;
+				notebook.list.push(response.data);
 			}
 
 			function getNotebooksError(error) {
@@ -32,10 +35,10 @@
 			}
 		}
 
-		function createTitle(title) {
-			return $http.post(api + '/notebooks', title, {
+		function createTitle(name) {
+			return $http.post(api + '/notebooks/', {'name': name}, {
 				headers: {
-					'Authorization': 'Basic 57ec639cf65271e77174f6d6fb84d8afa6ca99df'
+					'Authorization': 'Token bbc7f7b5492468db6a4a54a00c1b504930371792'
 				}})
 				.then(createNotebook)
 				.catch(createNotebookError);
@@ -45,7 +48,7 @@
 			}
 
 			function createNotebookError(error) {
-				//error
+				return error.data;
 			}
 
 
