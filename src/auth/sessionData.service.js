@@ -16,6 +16,7 @@
 		var user = {
 			username: sessionStorage.getItem('username'),
 			token: sessionStorage.getItem('token'),
+
 		};
 
 		var service = {
@@ -42,8 +43,10 @@
 		function setCurrentUser(authUser) {
 			user.username = authUser.username;
 			user.token = authUser.token;
+			user.id = authUser.id;
 			sessionStorage.setItem('username', user.username);
 			sessionStorage.setItem('token', user.token);
+			sessionStorage.setItem('id', user.id);
 		};
 
 //		function isLoggedIn() {

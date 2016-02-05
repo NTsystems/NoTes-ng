@@ -14,10 +14,11 @@
 		* but this is easier to maintain.
 		*/
 		'ui.router',
-		'app.auth',
+		'app.auth'
 		])
 		.constant('api_url', 'http://127.0.0.1:8081/api/');
 })();
+
 (function() {
 	angular
 		.module('app')
@@ -69,6 +70,16 @@
 						controllerAs: 'vm',
 					}
 				}
+			})
+			.state('home.tasks', {
+				url: 'tasks',
+				views: {
+					'content@': {
+						templateUrl: 'src/auth/partials/tasks.html',
+						controller: 'TasksController',
+						controllerAs: 'vm',
+					}
+				}
 			});
 	}
 })();
@@ -76,8 +87,9 @@
 (function () {
 	'use strict';
 
-	angular.module('app.auth', []);
+	angular.module('app.auth',[]);
 })();
+
 /**
 * Login Controller
 * @namespace Controllers
@@ -104,16 +116,18 @@
 			var authUser = {
 				username: vm.user.e_mail,
 				password: vm.user.password,
+
 			};
 
 			return loginservice.loginUser(authUser);
 		};
 
-		
+
 
 	};
 
 })();
+
 /**
 * Login service Factory
 * @namespace Factories
@@ -129,7 +143,7 @@
 	loginservice.$inject = ['$http', 'api_url', 'sessionData', '$location'];
 
 	function loginservice($http, api_url, sessionData, $location) {
-		
+
 		return {
 			loginUser: loginUser,
 		};
@@ -137,7 +151,7 @@
 
 		/////////////////////////
 
-		
+
 		/**
 		* @name loginUser
 		* @param {JSON} user's e_mail&password
@@ -162,7 +176,7 @@
 				if(response != null){
 					authUser.token = response.data;
 					sessionData.setCurrentUser(authUser);
-					$location.path('profile');
+					$location.path('home');
 				}
 			};
 
@@ -174,6 +188,7 @@
 	}
 
 })();
+
 /**
 * Profile Controller
 * @namespace Controllers
@@ -301,6 +316,7 @@
 		var user = {
 			username: sessionStorage.getItem('username'),
 			token: sessionStorage.getItem('token'),
+
 		};
 
 		var service = {
@@ -327,8 +343,10 @@
 		function setCurrentUser(authUser) {
 			user.username = authUser.username;
 			user.token = authUser.token;
+			user.id = authUser.id;
 			sessionStorage.setItem('username', user.username);
 			sessionStorage.setItem('token', user.token);
+			sessionStorage.setItem('id', user.id);
 		};
 
 //		function isLoggedIn() {
@@ -337,6 +355,96 @@
 	}
 
 })();
+
+(function () {
+    'use strict';
+
+    angular
+        .module('app.auth')
+        .controller('TasksController', TasksController)
+
+        TasksController.$inject = ['dataservice', 'sessionData'];
+
+
+        function TasksController(dataservice, sessionData) {
+
+            var vm = this;
+
+            vm.title = 'Tasks';
+            vm.getTasks = getTasks;
+            vm.isActive = isActive;
+            vm.tasks = [];
+
+
+
+            activate();
+
+            function activate() {
+                return getTasks();
+            }
+
+            function getTasks(){
+                return dataservice.getTasks()
+                    .then(function(data){
+
+                        vm.tasks = data.data;
+
+                        // var i;
+                        // for(i in vm.tasks){
+                        //     console.log(vm.tasks[i])
+                        // }
+
+                        // var user = sessionData.getCurrentUser();
+                        // console.log("Id: " + user.id + " | " + "Username: " + user.username);
+
+                    });
+            }
+
+            function isActive(task) {
+                return !!(vm.selectedTask === task);
+            }
+
+
+
+        }
+})();
+
+(function () {
+    'use strict';
+
+    angular
+        .module('app.auth')
+        .factory('dataservice', dataservice);
+
+    dataservice.$inject = ['$http', 'api_url', 'sessionData'];
+
+    function dataservice($http, api_url, sessionData) {
+
+        var service = {
+            getTasks: getTasks
+        };
+
+        return service;
+
+        function getTasks() {
+
+            var username = sessionStorage.getItem('username');
+
+            return $http.get(api_url + 'tasks/' + username)
+
+                .then(function(data, status, headers, config){
+                    return data;
+                })
+
+                .catch(function(data, status, headers, config){
+                    console.log("TOKEN: " + sessionStorage.getItem('token'));
+                    console.log("DATA STATUS: " + status);
+                });
+        }
+    }
+
+})();
+
 /**
 * Header Controller
 * @namespace Controllers
@@ -348,9 +456,9 @@
 		.module('app')
 		.controller('HeaderController', HeaderController);
 
-	HeaderController.$inject = ['$window', 'sessionData', '$rootScope'];
+	HeaderController.$inject = ['$window', 'sessionData', '$rootScope', '$location'];
 
-	function HeaderController($window, sessionData, $rootScope) {
+	function HeaderController($window, sessionData, $rootScope, $location) {
 		var vm = this;
 
 		if(sessionStorage.getItem('token')){
@@ -387,8 +495,9 @@
 
 		// remove current user
 		function logout() {
-			alert("logout");
+
 			sessionData.removeCurrentUser();
 		};
 	};
 })();
+

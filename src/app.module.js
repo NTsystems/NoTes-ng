@@ -14,7 +14,7 @@
 		* but this is easier to maintain.
 		*/
 		'ui.router',
-		'app.auth',
+		'app.auth'
 		])
 		.constant('api_url', 'http://127.0.0.1:8081/api/');
 })();

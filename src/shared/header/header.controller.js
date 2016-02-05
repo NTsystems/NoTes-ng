@@ -9,9 +9,9 @@
 		.module('app')
 		.controller('HeaderController', HeaderController);
 
-	HeaderController.$inject = ['$window', 'sessionData', '$rootScope'];
+	HeaderController.$inject = ['$window', 'sessionData', '$rootScope', '$location'];
 
-	function HeaderController($window, sessionData, $rootScope) {
+	function HeaderController($window, sessionData, $rootScope, $location) {
 		var vm = this;
 
 		if(sessionStorage.getItem('token')){
@@ -48,7 +48,7 @@
 
 		// remove current user
 		function logout() {
-			alert("logout");
+
 			sessionData.removeCurrentUser();
 		};
 	};

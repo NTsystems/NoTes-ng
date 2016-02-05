@@ -49,6 +49,16 @@
 						controllerAs: 'vm',
 					}
 				}
+			})
+			.state('home.tasks', {
+				url: 'tasks',
+				views: {
+					'content@': {
+						templateUrl: 'src/auth/partials/tasks.html',
+						controller: 'TasksController',
+						controllerAs: 'vm',
+					}
+				}
 			});
 	}
 })();

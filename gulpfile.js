@@ -12,8 +12,8 @@ var gulp = require('gulp'),
 
 gulp.task('bower', function(){
 
-	var jsFilter = gulpFilter('*.js'),
-		cssFilter = gulpFilter('*.css');
+	var jsFilter = gulpFilter('*.js', {restore: true}),
+		cssFilter = gulpFilter('*.css', {restore: true});
 
 	return gulp.src(bowerMain())
 
@@ -25,7 +25,7 @@ gulp.task('bower', function(){
 			suffix: ".min"
 		}))
 		.pipe(gulp.dest('./dist'))
-		.pipe(jsFilter.restore())
+		.pipe(jsFilter.restore)
 
 		// CSS
 		.pipe(cssFilter)
@@ -36,8 +36,9 @@ gulp.task('bower', function(){
 			suffix: ".min"
 		}))
 		.pipe(gulp.dest('./dist'))
-		.pipe(cssFilter.restore())
+		.pipe(cssFilter.restore)
 });
+
 
 /*
 * explicitly listed files, because gulp doesn't pack them in right order
@@ -46,5 +47,5 @@ gulp.task('concatenate', function () {
 	return gulp.src(['./src/app.module.js', './src/app.config.js', './src/auth/auth.module.js', './src/**/*.js'])
 		.pipe(concat('notesapp.js'))
 		.pipe(gulp.dest('./dist'));
-}); 
-    
+});
+

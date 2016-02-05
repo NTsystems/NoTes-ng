@@ -13,7 +13,7 @@
 	loginservice.$inject = ['$http', 'api_url', 'sessionData', '$location'];
 
 	function loginservice($http, api_url, sessionData, $location) {
-		
+
 		return {
 			loginUser: loginUser,
 		};
@@ -21,7 +21,7 @@
 
 		/////////////////////////
 
-		
+
 		/**
 		* @name loginUser
 		* @param {JSON} user's e_mail&password
@@ -46,7 +46,7 @@
 				if(response != null){
 					authUser.token = response.data;
 					sessionData.setCurrentUser(authUser);
-					$location.path('profile');
+					$location.path('home');
 				}
 			};
 
