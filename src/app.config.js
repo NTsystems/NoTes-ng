@@ -17,7 +17,12 @@
 		      	},
 		      	'footer': {
 		      		templateUrl: 'src/shared/footer/footer.html'
-		      	}
+		      	},
+		      	'content@': {
+						templateUrl: 'src/auth/partials/login.view.html',
+						controller: 'LoginController',
+						controllerAs: 'vm',
+					}
 		      }
 		    })
 			.state('home.signup', {
@@ -54,8 +59,18 @@
 				url: 'tasks',
 				views: {
 					'content@': {
-						templateUrl: 'src/auth/partials/tasks.html',
+						templateUrl: 'src/tasks/partials/tasks.html',
 						controller: 'TasksController',
+						controllerAs: 'vm',
+					}
+				}
+			})
+			.state('home.task-details', {
+				url: 'task-details/:id',
+				views: {
+					'content@': {
+						templateUrl: 'src/tasks/partials/task-details.html',
+						controller: 'TaskDetailController',
 						controllerAs: 'vm',
 					}
 				}

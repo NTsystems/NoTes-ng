@@ -46,7 +46,7 @@
 				if(response != null){
 					authUser.token = response.data;
 					sessionData.setCurrentUser(authUser);
-					$location.path('home');
+					$location.path('tasks');
 				}
 			};
 

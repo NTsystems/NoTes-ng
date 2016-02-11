@@ -1,0 +1,26 @@
+<div class="container mycontainer">
+    <div class="row">
+        <div class="media">
+            <div class="media-left">
+                <img src="assets/images/profile.jpg" alt="..." class="media-object">
+            </div>
+            <div class="media-body">
+                <h4 class="media-heading">Welcome <mark>{{vm.e_mail}}</mark></h4>
+                <h3><span class="label label-info">These are tasks assigned to you</span></h3>
+            </div>
+        </div>
+    </div>
+    <br>
+    <br>
+    <div class="row">
+        <div class = "col-md-4" ng-repeat="task in vm.tasks">
+            <div class="panel panel-default" >
+                <div class="panel-heading">
+                    <a ui-sref="home.task-details({id : task.id})" class="panel-title">{{task.name}}</a>
+                </div>
+                <div class="panel-body mypanel">{{task.description}}</div>
+            </div>
+        </div>
+    </div>
+</div>
+<link rel="stylesheet" href="../../../assets/css/auth.css">

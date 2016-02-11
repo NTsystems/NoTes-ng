@@ -14,7 +14,8 @@
 		* but this is easier to maintain.
 		*/
 		'ui.router',
-		'app.auth'
+		'app.auth',
+		'app.tasks'
 		])
 		.constant('api_url', 'http://127.0.0.1:8081/api/');
 })();
@@ -38,7 +39,12 @@
 		      	},
 		      	'footer': {
 		      		templateUrl: 'src/shared/footer/footer.html'
-		      	}
+		      	},
+		      	'content@': {
+						templateUrl: 'src/auth/partials/login.view.html',
+						controller: 'LoginController',
+						controllerAs: 'vm',
+					}
 		      }
 		    })
 			.state('home.signup', {
@@ -75,13 +81,29 @@
 				url: 'tasks',
 				views: {
 					'content@': {
-						templateUrl: 'src/auth/partials/tasks.html',
+						templateUrl: 'src/tasks/partials/tasks.html',
 						controller: 'TasksController',
+						controllerAs: 'vm',
+					}
+				}
+			})
+			.state('home.task-details', {
+				url: 'task-details/:id',
+				views: {
+					'content@': {
+						templateUrl: 'src/tasks/partials/task-details.html',
+						controller: 'TaskDetailController',
 						controllerAs: 'vm',
 					}
 				}
 			});
 	}
+})();
+
+(function () {
+	'use strict';
+
+	angular.module('app.tasks',[]);
 })();
 
 (function () {
@@ -116,7 +138,6 @@
 			var authUser = {
 				username: vm.user.e_mail,
 				password: vm.user.password,
-
 			};
 
 			return loginservice.loginUser(authUser);
@@ -176,7 +197,7 @@
 				if(response != null){
 					authUser.token = response.data;
 					sessionData.setCurrentUser(authUser);
-					$location.path('home');
+					$location.path('tasks');
 				}
 			};
 
@@ -316,7 +337,6 @@
 		var user = {
 			username: sessionStorage.getItem('username'),
 			token: sessionStorage.getItem('token'),
-
 		};
 
 		var service = {
@@ -346,7 +366,6 @@
 			user.id = authUser.id;
 			sessionStorage.setItem('username', user.username);
 			sessionStorage.setItem('token', user.token);
-			sessionStorage.setItem('id', user.id);
 		};
 
 //		function isLoggedIn() {
@@ -356,11 +375,216 @@
 
 })();
 
+/**
+* TaskDetail Controller
+* @namespace Controllers
+* @author Stefan Petkovic
+*/
 (function () {
     'use strict';
 
     angular
-        .module('app.auth')
+        .module('app.tasks')
+        .controller('TaskDetailController', TaskDetailController);
+
+        TaskDetailController.$inject = ['taskDetailService', 'sessionData', '$scope'];
+
+
+        function TaskDetailController(taskDetailService, sessionData, $stateParams, $scope) {
+
+            var vm = this;
+
+            vm.title = 'Task details';
+            vm.postComment = postComment;
+            vm.deleteComment = deleteComment;
+            vm.update = update;
+            vm.taskDetails = [];
+            vm.comments = [];
+            activate();
+
+            function activate() {
+                return getTaskDetails(), getComments();
+
+            }
+
+            function getTaskDetails(){
+                return taskDetailService.getTaskDetails()
+                .then(function(data){
+
+                    vm.taskDetails = data.data;
+                    vm.selectData = {
+                        availableOptions: [
+                          {id: 1, name: 'New'},
+                          {id: 2, name: 'In progress'},
+                          {id: 3, name: 'Done'},
+                          {id: 4, name: 'Closed'}
+                        ],
+                        selectedOption: {id: vm.taskDetails.status} //This sets the default value of the select in the ui
+                        };
+                });
+            }
+
+            function getComments(){
+                return taskDetailService.getComments()
+                .then(function(data){
+                    vm.comments = data.data;
+
+                });
+            }
+
+            function update() {
+                var task = {
+                    'status': vm.selectData.selectedOption.id,
+                    'percentage': vm.taskDetails.percentage,
+                };
+
+                return taskDetailService.updateTask(task);
+            }
+
+            function postComment() {
+                var comm = {
+                    'text': vm.comments.text
+                };
+
+                vm.comments.push(comm);
+
+                return taskDetailService.postComment(comm);
+            }
+
+            function deleteComment(commid) {
+                vm.comments.splice(vm.comments.indexOf(commid),1);
+                return taskDetailService.deleteComment(commid);
+            }
+        }
+})();
+
+/**
+* taskDetail service Factory
+* @namespace Factories
+* @author Stefan Petkovic
+*/
+(function () {
+    'use strict';
+
+    angular
+        .module('app.tasks')
+        .factory('taskDetailService', taskDetailService);
+
+    taskDetailService.$inject = ['$http', 'api_url', 'sessionData', '$stateParams', '$location'];
+
+    function taskDetailService($http, api_url, sessionData, $stateParams, $location) {
+
+        var service = {
+            getTaskDetails: getTaskDetails,
+            getComments: getComments,
+            updateTask: updateTask,
+            postComment: postComment,
+            deleteComment: deleteComment
+        };
+
+        return service;
+
+        function getTaskDetails() {
+
+            return $http.get(api_url + 'tasks/' + $stateParams.id + '/')
+                .then(function(data, status, headers, config){
+                    return data;
+                })
+                .catch(function(data, status, headers, config){
+                    console.log("DATA STATUS: " + status);
+                });
+        }
+
+       function getComments() {
+
+            return $http.get(api_url + 'tasks/' + $stateParams.id + '/comments/')
+                .then(function(data, status, headers, config){
+                    return data;
+                })
+                .catch(function(data, status, headers, config){
+                    if(status === undefined){
+                        console.log("There are no comments");
+                    }else{
+                        console.log("DATA STATUS: " + status);
+                    }
+                });
+        }
+
+
+        function updateTask(task) {
+            console.log("Task status: " + task.status);
+            console.log("Task percentage: " + task.percentage);
+            return $http.put(api_url + 'tasks/' + $stateParams.id + '/', {
+                    'status' : task.status,
+                    'percentage' : task.percentage
+                })
+                .then(taskUpdated)
+                .catch(updateFailed);
+
+            function taskUpdated(response) {
+                console.log('Response is: ', response);
+                if(response !== null){
+                    $location.path('tasks');
+                }
+            }
+
+            function updateFailed(error) {
+                console.log('Task update failed.', error);
+
+            }
+        }
+
+        function postComment(comm) {
+            console.log("Comment text: " + comm.text);
+            return $http.post(api_url + 'tasks/' + $stateParams.id + '/comments/', {
+                    'text' : comm.text
+                })
+                .then(commPosted)
+                .catch(postFailed);
+
+            function commPosted(response) {
+                console.log('Response is: ', response);
+                if(response !== null){
+                    $location.path('task-details/'+$stateParams.id);
+
+                }
+            }
+
+            function postFailed(error) {
+                console.log('Comment post failed.', error);
+
+            }
+        }
+
+        function deleteComment(commid) {
+            console.log("Comment id: " + commid);
+            return $http.delete(api_url + 'tasks/' + $stateParams.id + '/comments/' + commid + '/')
+                .then(commDeleted)
+                .catch(deleteFailed);
+
+            function commDeleted(response) {
+                console.log('Response is: ', response);
+                if(response !== null){
+                    getComments();
+                    $location.path('task-details/'+$stateParams.id);
+
+                }
+            }
+
+            function deleteFailed(error) {
+                console.log('Comment delete failed.', error);
+
+            }
+        }
+    }
+
+})();
+
+(function () {
+    'use strict';
+
+    angular
+        .module('app.tasks')
         .controller('TasksController', TasksController)
 
         TasksController.$inject = ['dataservice', 'sessionData'];
@@ -374,9 +598,8 @@
             vm.getTasks = getTasks;
             vm.isActive = isActive;
             vm.tasks = [];
-
-
-
+            var user = sessionData.getCurrentUser();
+            vm.e_mail = user.username;
             activate();
 
             function activate() {
@@ -385,19 +608,9 @@
 
             function getTasks(){
                 return dataservice.getTasks()
-                    .then(function(data){
-
-                        vm.tasks = data.data;
-
-                        // var i;
-                        // for(i in vm.tasks){
-                        //     console.log(vm.tasks[i])
-                        // }
-
-                        // var user = sessionData.getCurrentUser();
-                        // console.log("Id: " + user.id + " | " + "Username: " + user.username);
-
-                    });
+                .then(function(data){
+                    vm.tasks = data.data;
+                });
             }
 
             function isActive(task) {
@@ -413,7 +626,7 @@
     'use strict';
 
     angular
-        .module('app.auth')
+        .module('app.tasks')
         .factory('dataservice', dataservice);
 
     dataservice.$inject = ['$http', 'api_url', 'sessionData'];
@@ -430,7 +643,7 @@
 
             var username = sessionStorage.getItem('username');
 
-            return $http.get(api_url + 'tasks/' + username)
+            return $http.get(api_url + 'tasks/' + username + '/')
 
                 .then(function(data, status, headers, config){
                     return data;

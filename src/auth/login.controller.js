@@ -24,7 +24,6 @@
 			var authUser = {
 				username: vm.user.e_mail,
 				password: vm.user.password,
-
 			};
 
 			return loginservice.loginUser(authUser);

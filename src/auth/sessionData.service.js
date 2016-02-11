@@ -16,7 +16,6 @@
 		var user = {
 			username: sessionStorage.getItem('username'),
 			token: sessionStorage.getItem('token'),
-
 		};
 
 		var service = {
@@ -46,7 +45,6 @@
 			user.id = authUser.id;
 			sessionStorage.setItem('username', user.username);
 			sessionStorage.setItem('token', user.token);
-			sessionStorage.setItem('id', user.id);
 		};
 
 //		function isLoggedIn() {

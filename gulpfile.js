@@ -44,7 +44,7 @@ gulp.task('bower', function(){
 * explicitly listed files, because gulp doesn't pack them in right order
 */
 gulp.task('concatenate', function () {
-	return gulp.src(['./src/app.module.js', './src/app.config.js', './src/auth/auth.module.js', './src/**/*.js'])
+	return gulp.src(['./src/app.module.js', './src/app.config.js','./src/tasks/tasks.module.js', './src/auth/auth.module.js', './src/**/*.js'])
 		.pipe(concat('notesapp.js'))
 		.pipe(gulp.dest('./dist'));
 });

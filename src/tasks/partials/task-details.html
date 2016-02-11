@@ -1,0 +1,64 @@
+<div class="container mycontainer" >
+    <div class="row">
+        <form class="form-horizontal" ng-submit="vm.update()" role=form>
+            <div class="form-group">
+                <label class="col-md-4 text-right" for="name">Name</label>
+                <div class="col-md-8">
+                    <input class="form-control" readonly type="text" id="name" ng-model="vm.taskDetails.name">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 text-right" for="description">Description</label>
+                <div class="col-md-8">
+                    <textarea class="form-control mypanel" readonly type="text" id="description" ng-model="vm.taskDetails.description"></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 text-right" for="place">Task Status</label>
+                <div class="col-md-8">
+                    <select class="form-control" ng-model="vm.selectData.selectedOption"
+                        ng-options="option.name for option in vm.selectData.availableOptions track by option.id"></select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 text-right" for="percentage">Percentage</label>
+                <div class="col-md-8">
+                    <input type="range" min="0" max="100" step="10" id="percentage" ng-model="vm.taskDetails.percentage">
+                    <span class="desno">{{vm.taskDetails.percentage}}%</span>
+                </div>
+            </div>
+            <div class="form-actions col-md-4 col-md-offset-4">
+                <button type="submit" class="btn btn-primary">Confirm Update</button>
+                <a ui-sref="home.tasks" class="btn btn-link">Cancel</a>
+            </div>
+        </form>
+    </div>
+    <br>
+    <br>
+
+    <!--Comments section-->
+
+    <div class="row">
+        <div class="panel panel-default" ng-repeat="comm in vm.comments" >
+            <div class="panel-heading">Comment #{{comm.id}}<a href="#" ng-click="vm.deleteComment(comm.id)" class="desno"><img src="assets/images/delete.png" alt="Delete" height="10" width="10"></a></div>
+            <div class="panel-body">{{comm.text}}</div>
+        </div>
+        <form id="commForm" class="form-horizontal" onclick="reset()" ng-submit="vm.postComment()">
+            <div class="panel panel-default">
+                <div class="panel-heading">Post a new comment</div>
+                <textarea class="form-control" ng-model="vm.comments.text" placeholder="Your comment..."></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Post</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    function reset(){
+        var form = document.getElementById("commForm");
+        form.reset();
+    }
+</script>
+
+<link rel="stylesheet" href="../../../assets/css/auth.css">
+
