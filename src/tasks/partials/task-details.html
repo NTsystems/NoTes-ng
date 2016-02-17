@@ -40,13 +40,13 @@
 
     <div class="row">
         <div class="panel panel-default" ng-repeat="comm in vm.comments" >
-            <div class="panel-heading">Comment #{{comm.id}}<a href="#" ng-click="vm.deleteComment(comm.id)" class="desno"><img src="assets/images/delete.png" alt="Delete" height="10" width="10"></a></div>
+            <div class="panel-heading">Comment #{{comm.id}}<a href="#" ng-click="vm.deleteComment(comm.id)"
+                        class="desno"><img src="assets/images/delete.png" alt="Delete" height="10" width="10"></a></div>
             <div class="panel-body">{{comm.text}}</div>
         </div>
-        <form id="commForm" class="form-horizontal" onclick="reset()" ng-submit="vm.postComment()">
+        <form role="form" name="vm.commForm" class="form-horizontal"   ng-submit="vm.postComment()">
             <div class="panel panel-default">
-                <div class="panel-heading">Post a new comment</div>
-                <textarea class="form-control" ng-model="vm.comments.text" placeholder="Your comment..."></textarea>
+                <textarea class="form-control" required ng-model="vm.comments.text" placeholder="Add new comment..."></textarea>
             </div>
             <button type="submit" class="btn btn-primary">Post</button>
         </form>

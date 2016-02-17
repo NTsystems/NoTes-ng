@@ -17,12 +17,7 @@
 		      	},
 		      	'footer': {
 		      		templateUrl: 'src/shared/footer/footer.html'
-		      	},
-		      	'content@': {
-						templateUrl: 'src/auth/partials/login.view.html',
-						controller: 'LoginController',
-						controllerAs: 'vm',
-					}
+		      	}
 		      }
 		    })
 			.state('home.signup', {

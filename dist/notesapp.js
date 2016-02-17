@@ -39,12 +39,7 @@
 		      	},
 		      	'footer': {
 		      		templateUrl: 'src/shared/footer/footer.html'
-		      	},
-		      	'content@': {
-						templateUrl: 'src/auth/partials/login.view.html',
-						controller: 'LoginController',
-						controllerAs: 'vm',
-					}
+		      	}
 		      }
 		    })
 			.state('home.signup', {
@@ -397,11 +392,11 @@
             vm.title = 'Task details';
             vm.postComment = postComment;
             vm.deleteComment = deleteComment;
-            vm.update = update;
+            vm.update = updateTask;
             vm.taskDetails = [];
             vm.comments = [];
-            activate();
 
+            activate();
             function activate() {
                 return getTaskDetails(), getComments();
 
@@ -432,27 +427,32 @@
                 });
             }
 
-            function update() {
+
+            function updateTask() {
                 var task = {
                     'status': vm.selectData.selectedOption.id,
                     'percentage': vm.taskDetails.percentage,
                 };
-
                 return taskDetailService.updateTask(task);
             }
+
 
             function postComment() {
                 var comm = {
                     'text': vm.comments.text
                 };
-
-                vm.comments.push(comm);
-
-                return taskDetailService.postComment(comm);
+                return taskDetailService.postComment(comm,vm.comments);
             }
 
+
             function deleteComment(commid) {
-                vm.comments.splice(vm.comments.indexOf(commid),1);
+                var iter = 0;
+                for(var i in vm.comments){
+                    if(commid === vm.comments[i].id){
+                        vm.comments.splice(iter,1);
+                    }
+                    iter += 1;
+                }
                 return taskDetailService.deleteComment(commid);
             }
         }
@@ -484,6 +484,7 @@
 
         return service;
 
+
         function getTaskDetails() {
 
             return $http.get(api_url + 'tasks/' + $stateParams.id + '/')
@@ -495,6 +496,7 @@
                 });
         }
 
+
        function getComments() {
 
             return $http.get(api_url + 'tasks/' + $stateParams.id + '/comments/')
@@ -503,7 +505,7 @@
                 })
                 .catch(function(data, status, headers, config){
                     if(status === undefined){
-                        console.log("There are no comments");
+                        console.log("There are no comments!!!");
                     }else{
                         console.log("DATA STATUS: " + status);
                     }
@@ -534,8 +536,9 @@
             }
         }
 
-        function postComment(comm) {
-            console.log("Comment text: " + comm.text);
+
+        function postComment(comm, comments) {
+
             return $http.post(api_url + 'tasks/' + $stateParams.id + '/comments/', {
                     'text' : comm.text
                 })
@@ -545,36 +548,19 @@
             function commPosted(response) {
                 console.log('Response is: ', response);
                 if(response !== null){
-                    $location.path('task-details/'+$stateParams.id);
-
+                    comments.push(response.data);   // shows comment without reloading the page
+                    comments.text = "";             // clears textarea after post
                 }
             }
 
             function postFailed(error) {
                 console.log('Comment post failed.', error);
-
             }
         }
 
+
         function deleteComment(commid) {
-            console.log("Comment id: " + commid);
-            return $http.delete(api_url + 'tasks/' + $stateParams.id + '/comments/' + commid + '/')
-                .then(commDeleted)
-                .catch(deleteFailed);
-
-            function commDeleted(response) {
-                console.log('Response is: ', response);
-                if(response !== null){
-                    getComments();
-                    $location.path('task-details/'+$stateParams.id);
-
-                }
-            }
-
-            function deleteFailed(error) {
-                console.log('Comment delete failed.', error);
-
-            }
+            return $http.delete(api_url + 'tasks/' + $stateParams.id + '/comments/' + commid + '/');
         }
     }
 

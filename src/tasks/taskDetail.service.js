@@ -24,6 +24,7 @@
 
         return service;
 
+
         function getTaskDetails() {
 
             return $http.get(api_url + 'tasks/' + $stateParams.id + '/')
@@ -34,6 +35,7 @@
                     console.log("DATA STATUS: " + status);
                 });
         }
+
 
        function getComments() {
 
@@ -74,8 +76,9 @@
             }
         }
 
-        function postComment(comm) {
-            console.log("Comment text: " + comm.text);
+
+        function postComment(comm, comments) {
+
             return $http.post(api_url + 'tasks/' + $stateParams.id + '/comments/', {
                     'text' : comm.text
                 })
@@ -85,36 +88,19 @@
             function commPosted(response) {
                 console.log('Response is: ', response);
                 if(response !== null){
-                    $location.path('task-details/'+$stateParams.id);
-
+                    comments.push(response.data);   // shows comment without reloading the page
+                    comments.text = "";             // clears textarea after post
                 }
             }
 
             function postFailed(error) {
                 console.log('Comment post failed.', error);
-
             }
         }
 
+
         function deleteComment(commid) {
-            console.log("Comment id: " + commid);
-            return $http.delete(api_url + 'tasks/' + $stateParams.id + '/comments/' + commid + '/')
-                .then(commDeleted)
-                .catch(deleteFailed);
-
-            function commDeleted(response) {
-                console.log('Response is: ', response);
-                if(response !== null){
-                    getComments();
-                    $location.path('task-details/'+$stateParams.id);
-
-                }
-            }
-
-            function deleteFailed(error) {
-                console.log('Comment delete failed.', error);
-
-            }
+            return $http.delete(api_url + 'tasks/' + $stateParams.id + '/comments/' + commid + '/');
         }
     }
 

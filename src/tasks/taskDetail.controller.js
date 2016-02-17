@@ -20,11 +20,11 @@
             vm.title = 'Task details';
             vm.postComment = postComment;
             vm.deleteComment = deleteComment;
-            vm.update = update;
+            vm.update = updateTask;
             vm.taskDetails = [];
             vm.comments = [];
-            activate();
 
+            activate();
             function activate() {
                 return getTaskDetails(), getComments();
 
@@ -55,27 +55,32 @@
                 });
             }
 
-            function update() {
+
+            function updateTask() {
                 var task = {
                     'status': vm.selectData.selectedOption.id,
                     'percentage': vm.taskDetails.percentage,
                 };
-
                 return taskDetailService.updateTask(task);
             }
+
 
             function postComment() {
                 var comm = {
                     'text': vm.comments.text
                 };
-
-                vm.comments.push(comm);
-
-                return taskDetailService.postComment(comm);
+                return taskDetailService.postComment(comm,vm.comments);
             }
 
+
             function deleteComment(commid) {
-                vm.comments.splice(vm.comments.indexOf(commid),1);
+                var iter = 0;
+                for(var i in vm.comments){
+                    if(commid === vm.comments[i].id){
+                        vm.comments.splice(iter,1);
+                    }
+                    iter += 1;
+                }
                 return taskDetailService.deleteComment(commid);
             }
         }
