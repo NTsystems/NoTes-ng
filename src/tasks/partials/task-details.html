@@ -1,4 +1,4 @@
-<div class="container mycontainer" >
+<div class="container mycontainer">
     <div class="row">
         <form class="form-horizontal" ng-submit="vm.update()" role=form>
             <div class="form-group">
@@ -30,6 +30,8 @@
             <div class="form-actions col-md-4 col-md-offset-4">
                 <button type="submit" class="btn btn-primary">Confirm Update</button>
                 <a ui-sref="home.tasks" class="btn btn-link">Cancel</a>
+                <span ng-show="vm.successMessage" class="alert alert-success"><strong>Updated!</strong></span>
+
             </div>
         </form>
     </div>
@@ -52,13 +54,6 @@
         </form>
     </div>
 </div>
-
-<script>
-    function reset(){
-        var form = document.getElementById("commForm");
-        form.reset();
-    }
-</script>
 
 <link rel="stylesheet" href="../../../assets/css/auth.css">
 

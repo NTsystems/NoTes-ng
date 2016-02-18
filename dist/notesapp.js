@@ -382,10 +382,10 @@
         .module('app.tasks')
         .controller('TaskDetailController', TaskDetailController);
 
-        TaskDetailController.$inject = ['taskDetailService', 'sessionData', '$scope'];
+        TaskDetailController.$inject = ['taskDetailService', 'sessionData', '$timeout'];
 
 
-        function TaskDetailController(taskDetailService, sessionData, $stateParams, $scope) {
+        function TaskDetailController(taskDetailService, sessionData, $timeout) {
 
             var vm = this;
 
@@ -396,11 +396,15 @@
             vm.taskDetails = [];
             vm.comments = [];
 
+            vm.successMessage = false;
+
             activate();
             function activate() {
                 return getTaskDetails(), getComments();
 
             }
+
+
 
             function getTaskDetails(){
                 return taskDetailService.getTaskDetails()
@@ -411,8 +415,7 @@
                         availableOptions: [
                           {id: 1, name: 'New'},
                           {id: 2, name: 'In progress'},
-                          {id: 3, name: 'Done'},
-                          {id: 4, name: 'Closed'}
+                          {id: 3, name: 'Done'}
                         ],
                         selectedOption: {id: vm.taskDetails.status} //This sets the default value of the select in the ui
                         };
@@ -429,11 +432,16 @@
 
 
             function updateTask() {
-                var task = {
+                var task =
+                    {
                     'status': vm.selectData.selectedOption.id,
                     'percentage': vm.taskDetails.percentage,
-                };
-                return taskDetailService.updateTask(task);
+                    };
+
+                vm.successMessage = true;
+                $timeout(function () { vm.successMessage = false;}, 3000);
+
+                taskDetailService.updateTask(task);
             }
 
 
@@ -441,7 +449,7 @@
                 var comm = {
                     'text': vm.comments.text
                 };
-                return taskDetailService.postComment(comm,vm.comments);
+                taskDetailService.postComment(comm,vm.comments);
             }
 
 
@@ -449,11 +457,11 @@
                 var iter = 0;
                 for(var i in vm.comments){
                     if(commid === vm.comments[i].id){
-                        vm.comments.splice(iter,1);
+                        vm.comments.splice(iter,1);     // removes deleted comment from comment list
                     }
                     iter += 1;
                 }
-                return taskDetailService.deleteComment(commid);
+                taskDetailService.deleteComment(commid);
             }
         }
 })();
@@ -472,7 +480,7 @@
 
     taskDetailService.$inject = ['$http', 'api_url', 'sessionData', '$stateParams', '$location'];
 
-    function taskDetailService($http, api_url, sessionData, $stateParams, $location) {
+    function taskDetailService($http, api_url, sessionData, $stateParams, $location, $timeout) {
 
         var service = {
             getTaskDetails: getTaskDetails,
@@ -514,9 +522,8 @@
 
 
         function updateTask(task) {
-            console.log("Task status: " + task.status);
-            console.log("Task percentage: " + task.percentage);
-            return $http.put(api_url + 'tasks/' + $stateParams.id + '/', {
+
+             $http.put(api_url + 'tasks/' + $stateParams.id + '/', {
                     'status' : task.status,
                     'percentage' : task.percentage
                 })
@@ -524,9 +531,9 @@
                 .catch(updateFailed);
 
             function taskUpdated(response) {
-                console.log('Response is: ', response);
+                //console.log('Response is: ', response);
                 if(response !== null){
-                    $location.path('tasks');
+                    $location.path('task-details/'+$stateParams.id);
                 }
             }
 
@@ -548,7 +555,7 @@
             function commPosted(response) {
                 console.log('Response is: ', response);
                 if(response !== null){
-                    comments.push(response.data);   // shows comment without reloading the page
+                    comments.push(response.data);   // shows new comment without reloading the page
                     comments.text = "";             // clears textarea after post
                 }
             }

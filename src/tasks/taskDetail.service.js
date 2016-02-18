@@ -12,7 +12,7 @@
 
     taskDetailService.$inject = ['$http', 'api_url', 'sessionData', '$stateParams', '$location'];
 
-    function taskDetailService($http, api_url, sessionData, $stateParams, $location) {
+    function taskDetailService($http, api_url, sessionData, $stateParams, $location, $timeout) {
 
         var service = {
             getTaskDetails: getTaskDetails,
@@ -54,9 +54,8 @@
 
 
         function updateTask(task) {
-            console.log("Task status: " + task.status);
-            console.log("Task percentage: " + task.percentage);
-            return $http.put(api_url + 'tasks/' + $stateParams.id + '/', {
+
+             $http.put(api_url + 'tasks/' + $stateParams.id + '/', {
                     'status' : task.status,
                     'percentage' : task.percentage
                 })
@@ -64,9 +63,9 @@
                 .catch(updateFailed);
 
             function taskUpdated(response) {
-                console.log('Response is: ', response);
+                //console.log('Response is: ', response);
                 if(response !== null){
-                    $location.path('tasks');
+                    $location.path('task-details/'+$stateParams.id);
                 }
             }
 
@@ -88,7 +87,7 @@
             function commPosted(response) {
                 console.log('Response is: ', response);
                 if(response !== null){
-                    comments.push(response.data);   // shows comment without reloading the page
+                    comments.push(response.data);   // shows new comment without reloading the page
                     comments.text = "";             // clears textarea after post
                 }
             }

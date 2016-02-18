@@ -10,10 +10,10 @@
         .module('app.tasks')
         .controller('TaskDetailController', TaskDetailController);
 
-        TaskDetailController.$inject = ['taskDetailService', 'sessionData', '$scope'];
+        TaskDetailController.$inject = ['taskDetailService', 'sessionData', '$timeout'];
 
 
-        function TaskDetailController(taskDetailService, sessionData, $stateParams, $scope) {
+        function TaskDetailController(taskDetailService, sessionData, $timeout) {
 
             var vm = this;
 
@@ -24,11 +24,15 @@
             vm.taskDetails = [];
             vm.comments = [];
 
+            vm.successMessage = false;
+
             activate();
             function activate() {
                 return getTaskDetails(), getComments();
 
             }
+
+
 
             function getTaskDetails(){
                 return taskDetailService.getTaskDetails()
@@ -39,8 +43,7 @@
                         availableOptions: [
                           {id: 1, name: 'New'},
                           {id: 2, name: 'In progress'},
-                          {id: 3, name: 'Done'},
-                          {id: 4, name: 'Closed'}
+                          {id: 3, name: 'Done'}
                         ],
                         selectedOption: {id: vm.taskDetails.status} //This sets the default value of the select in the ui
                         };
@@ -57,11 +60,16 @@
 
 
             function updateTask() {
-                var task = {
+                var task =
+                    {
                     'status': vm.selectData.selectedOption.id,
                     'percentage': vm.taskDetails.percentage,
-                };
-                return taskDetailService.updateTask(task);
+                    };
+
+                vm.successMessage = true;
+                $timeout(function () { vm.successMessage = false;}, 3000);
+
+                taskDetailService.updateTask(task);
             }
 
 
@@ -69,7 +77,7 @@
                 var comm = {
                     'text': vm.comments.text
                 };
-                return taskDetailService.postComment(comm,vm.comments);
+                taskDetailService.postComment(comm,vm.comments);
             }
 
 
@@ -77,11 +85,11 @@
                 var iter = 0;
                 for(var i in vm.comments){
                     if(commid === vm.comments[i].id){
-                        vm.comments.splice(iter,1);
+                        vm.comments.splice(iter,1);     // removes deleted comment from comment list
                     }
                     iter += 1;
                 }
-                return taskDetailService.deleteComment(commid);
+                taskDetailService.deleteComment(commid);
             }
         }
 })();
