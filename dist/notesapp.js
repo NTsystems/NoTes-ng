@@ -439,7 +439,7 @@
                     };
 
                 vm.successMessage = true;
-                $timeout(function () { vm.successMessage = false;}, 3000);
+                $timeout(function () { vm.successMessage = false;}, 2000);
 
                 taskDetailService.updateTask(task);
             }
