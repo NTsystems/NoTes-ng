@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+	<title>NoTes | Welcome</title>
+	<link rel="stylesheet" type="text/css" href="dist/notes.css">
+</head>
+<body>
+
+	<div ui-view="header"></div>
+
+	<div ui-view="side-bar"></div>
+
+	<div class="container" ui-view="content"></div>
+
+	<footer class="footer" ui-view="footer"></footer>
+
+<script src="dist/notes.js"></script>
+<script src="dist/notesapp.js"></script>
+
+</body>
+</html>

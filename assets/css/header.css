@@ -1,0 +1,21 @@
+* {
+	font-family: Lobster;
+}
+
+.jumbotron {
+	background-image:url('../images/header-cover.jpg');
+	background-size:cover;
+	padding-top: 3%;
+	padding-bottom: 3%;
+	text-align: center;
+	color: darkorange;
+}
+
+.navbar {
+	margin-bottom: 0;
+}
+
+#logo {
+	font-size: 300%;
+	color: darkorange;
+}

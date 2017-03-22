@@ -1,0 +1,17 @@
+#register-img {
+	width: 100%;
+	height: 50%;
+}
+.mycontainer{
+    margin-bottom: 50px;
+}
+
+.desno{
+    float:right;
+}
+
+.mypanel{
+    min-height: 200px;
+    max-height: 200px;
+    overflow: auto;
+}
